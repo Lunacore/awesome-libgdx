@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.states.State;
 
@@ -15,6 +16,8 @@ public class ImageObject extends GameObject{
 	public ImageObject(ObjectInfo info, MapProperties properties) {
 		super(info, properties);
 		
+		TiledMapTileMapObject mo;
+
 		image = new Texture(get("image", String.class));
 		transform.setScale(new Vector2(1/State.PHYS_SCALE, 1/State.PHYS_SCALE));
 		transform.setPosition(new Vector2(get("x", Float.class) + get("width", Float.class)/2f, get("y", Float.class) + get("height", Float.class)/2f));

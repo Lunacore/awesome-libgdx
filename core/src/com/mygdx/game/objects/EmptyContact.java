@@ -6,10 +6,10 @@ import com.mygdx.game.states.State;
 
 public abstract class EmptyContact implements ContactListener{
 	
-	State ownerState;
+	protected State state;
 	
 	public EmptyContact(State state) {
-		ownerState = state;
+		this.state = state;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -30,12 +30,12 @@ public abstract class EmptyContact implements ContactListener{
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public Object getInstanceFromContact(Contact contact, Class class1) {
+	public <T> T getInstanceFromContact(Contact contact, Class class1) {
 		if(class1.isInstance(contact.getFixtureA().getBody().getUserData())) {
-			return contact.getFixtureA().getBody().getUserData();
+			return (T) contact.getFixtureA().getBody().getUserData();
 		}
 		if(class1.isInstance(contact.getFixtureB().getBody().getUserData())) {
-			return contact.getFixtureB().getBody().getUserData();
+			return (T) contact.getFixtureB().getBody().getUserData();
 		}
 		new Exception("Object with class specified: \"" + class1.getSimpleName() + "\" not found in contact").printStackTrace();
 		System.exit(1);

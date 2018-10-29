@@ -25,7 +25,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
-import com.mygdx.game.objects.Triangulator;
 import com.mygdx.game.states.State;
 import com.mygdx.game.structs.Transform;
 
@@ -98,6 +97,45 @@ public class Helper {
 	public static void renderTex(SpriteBatch sb, Texture tex, Transform transform, boolean flipX, boolean flipY) {
 		renderTex(sb, tex, transform.getPosition(), transform.getAngle(), transform.getScale(), flipX, flipY);
 	}
+	
+	public static void renderTex(SpriteBatch sb, Texture tex, Vector2 position, Vector2 rectSize) {
+		sb.draw(tex,
+				position.x,
+				position.y,
+				0,
+				0,
+				rectSize.x,
+				rectSize.y,
+				1,
+				1,
+				0,
+				0,
+				0,
+				(int)(rectSize.x / (float)tex.getWidth()),
+				(int)(rectSize.y / (float)tex.getHeight()),
+				false,
+				false);
+	}
+	
+	public static void renderTex(SpriteBatch sb, Texture tex, Vector2 position, Vector2 rectSize, float scale) {
+		sb.draw(tex,
+				position.x,
+				position.y,
+				0,
+				0,
+				rectSize.x,
+				rectSize.y,
+				1,
+				1,
+				0,
+				0,
+				0,
+				(int)(rectSize.x / ((float)tex.getWidth()*scale)),
+				(int)(rectSize.y / ((float)tex.getHeight()*scale)),
+				false,
+				false);
+	}
+	
 	//sem transform
 	public static void renderTex(SpriteBatch sb, Texture tex, Vector2 position, float angle, Vector2 size, boolean flipX, boolean flipY) {
 		sb.draw(
@@ -296,6 +334,16 @@ public class Helper {
 			
 			return b;
 		}
+		
+		public static Body createCircleBody(World world, Vector2 position, float radius, BodyType type) {
+			BodyDef def = new BodyDef();
+			def.type = type;
+			def.position.set(position.cpy().scl(1/State.PHYS_SCALE));
+			Body b =  world.createBody(def);
+			createCircleFixture(b, Vector2.Zero, radius);
+			return b;
+		}
+		
 		//FIXTURES
 		
 		public static Fixture createCircleFixture(Body body, Vector2 relative, float radius) {
@@ -367,6 +415,10 @@ public class Helper {
 			HEIGHT = new Vector2(0, Gdx.graphics.getHeight());
 		}
 
+	}
+
+	public static float lerp(float a, float b, float alpha) {
+		return (1 - alpha)  * a + alpha * b;
 	}
 
 }

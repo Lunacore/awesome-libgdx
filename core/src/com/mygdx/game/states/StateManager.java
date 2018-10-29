@@ -4,42 +4,47 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerListener;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.helper.Helper;
+import com.mygdx.game.objects.KeyMapper;
+import com.mygdx.game.objects.KeyMapper.Device;
 import com.mygdx.game.utils.FrameBufferStack;
 import com.mygdx.game.utils.ScreenSize;
 
-public class StateManager implements InputProcessor, ControllerListener{
+public class StateManager{
 	
 	ArrayList<State> states;
-	int currentState;
+	int currentState = 0;
 	int nextState;
 	
 	float alpha = 0;
 	
 	FrameBuffer stateBuffer;
 	
-	float seconds = 0.1f;
+	float seconds = 0.01f;
 	float transitionSpeed = 1 / seconds;
 	
-	
+	KeyMapper keyMapper;
 	
 	public StateManager() {
 		
-		Gdx.input.setInputProcessor(this);
-		Controllers.addListener(this);
+		keyMapper = new KeyMapper(this);
 		
 		states = new ArrayList<State>();
 		states.add(new StateOne(this));
-				
+		
+		nextState = currentState;
+		
 		stateBuffer = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+	}
+	
+	public void registerKey(String mapName, Device device, int keycode) {
+		keyMapper.registerKeyMap(mapName, device, keycode);
 	}
 	
 	public void setTransitionSpeed(float seconds) {
@@ -71,11 +76,13 @@ public class StateManager implements InputProcessor, ControllerListener{
 			states.get(nextState).render(sb);
 			FrameBufferStack.end();
 			
+			Helper.enableBlend();
 			sb.begin();
 			sb.setColor(1, 1, 1, alpha);
 			sb.draw(FrameBufferStack.getTexture(), 0, 0, ScreenSize.getWidth(),ScreenSize.getHeight(),
 					0, 0, ScreenSize.getWidth(), ScreenSize.getHeight(), false, true);
 			sb.end();
+			Helper.disableBlend();
 			
 			alpha += Gdx.graphics.getDeltaTime() * transitionSpeed;
 			if(alpha > 1) {
@@ -103,6 +110,7 @@ public class StateManager implements InputProcessor, ControllerListener{
 	}
 
 	public boolean buttonDown(Controller controller, int buttonCode) {
+		
 		return current().buttonDown(controller, buttonCode);
 	}
 
@@ -115,6 +123,7 @@ public class StateManager implements InputProcessor, ControllerListener{
 	}
 
 	public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+		System.out.println("Pov code: " + value);
 		return current().povMoved(controller, povCode, value);
 	}
 
@@ -163,6 +172,14 @@ public class StateManager implements InputProcessor, ControllerListener{
 
 	public boolean scrolled(int amount) {
 		return current().scrolled(amount);
+	}
+
+	public void inputIn(KeyMapper.Device device, String mapName) {
+		current().inputIn(device, mapName);
+	}
+	
+	public void inputOut(KeyMapper.Device device, String mapName) {
+		current().inputOut(device, mapName);
 	}
 
 }

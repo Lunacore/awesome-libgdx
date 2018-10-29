@@ -17,9 +17,11 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.helper.Helper;
 import com.mygdx.game.objects.GameObject;
 import com.mygdx.game.objects.GameParticle;
+import com.mygdx.game.objects.KeyMapper.Device;
 import com.mygdx.game.objects.ObjectInfo;
 import com.mygdx.game.objects.TmxRenderer;
 
@@ -31,7 +33,7 @@ public abstract class State{
 	
 	public static final float PHYS_SCALE = 45f;
 	
-	StateManager manager;
+	public StateManager manager;
 	ShapeRenderer sr;
 	OrthographicCamera camera;
 	ArrayList<GameObject> gos;
@@ -43,6 +45,8 @@ public abstract class State{
 	boolean debugDraw = false;
 	ArrayList<Body> forRemoval;
 	boolean pause = false;
+	
+	public float worldStepFPS = 60;
 	
 	//Iluminação
 	RayHandler rayHandler;
@@ -62,8 +66,22 @@ public abstract class State{
 	}
 	
 	public void removeObject(GameObject obj) {
-		gos.remove(obj);
 		obj.dispose();
+		gos.remove(obj);
+		
+	}
+	
+	
+	
+	@SuppressWarnings("rawtypes")
+	public ArrayList<GameObject> getByClass(Class clazz){
+		ArrayList<GameObject> result = new ArrayList<GameObject>();
+		for(GameObject go : gos) {
+			if(clazz.isInstance(go)) {
+				result.add(go);
+			}
+		}
+		return result;
 	}
 	
 	public ConeLight addConeLight(Color color, Vector2 position, float distance, float angle, float coneAngle) {
@@ -130,13 +148,14 @@ public abstract class State{
 		
 		forRemoval = new ArrayList<Body>();
 		gos = new ArrayList<GameObject>();
-		
-		
 	}
 	
 	public void enablePhysics(ContactListener listener) {
-		setWorld(new World(new Vector2(0, -4f), true));
+		setWorld(new World(new Vector2(0, -4f), false));
+		
+		if(listener != null)
 		getWorld().setContactListener(listener);
+		
 		b2dr = new Box2DDebugRenderer();
 		camera.zoom = 1/PHYS_SCALE;
 		camera.position.set(new Vector3(Helper.Position.CENTER.cpy().scl(1/PHYS_SCALE), 0));
@@ -166,6 +185,7 @@ public abstract class State{
 	
 	public void postRender(SpriteBatch sb) {
 		
+		if(tmxRenderer != null)
 		tmxRenderer.render(sb, sr, camera);
 		
 		sb.begin();
@@ -193,6 +213,7 @@ public abstract class State{
 	public void preUpdate(float delta) {
 		camera.update();
 		
+		if(tmxRenderer != null)
 		tmxRenderer.update(delta);
 		
 		Collections.sort(gos, new Comparator<GameObject>() {
@@ -211,11 +232,15 @@ public abstract class State{
 		if(getWorld() != null) {
 			if(!pause) {
 				for(int i = forRemoval.size() -1; i >= 0; i --) {
-					getWorld().destroyBody(forRemoval.get(i));
+					Array<Body> bodies = new Array<Body>();
+					getWorld().getBodies(bodies);
+					if(bodies.contains(forRemoval.get(i), true)) {
+						getWorld().destroyBody(forRemoval.get(i));
+					}
 				}
 				forRemoval.clear();
 				
-				getWorld().step(1/60f, 6, 2);
+				getWorld().step(1/worldStepFPS, 6, 2);
 			}
 		}
 	}
@@ -235,7 +260,14 @@ public abstract class State{
 	}
 	
 	public abstract void update(float delta);
-	public abstract void dispose();
+	
+	public void dispose() {
+		if(gos != null) {
+			for(int i = gos.size() - 1; i >= 0; i --) {
+				removeObject(gos.get(i));
+			}
+		}
+	}
 
 	public boolean keyDown(int keycode) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
@@ -353,6 +385,24 @@ public abstract class State{
 		}
 		return false;
 	}
+	
+
+	public void inputIn(Device device, String mapName) {
+		for(int i = gos.size() - 1; i>= 0; i --) {
+			gos.get(i).inputIn(device, mapName);
+		}
+	}
+	public void inputOut(Device device, String mapName) {
+		for(int i = gos.size() - 1; i>= 0; i --) {
+			gos.get(i).inputOut(device, mapName);
+		}
+	}
+			
+	public void inputAxis(Device device, String axisName, float value) {
+		for(int i = gos.size() - 1; i>= 0; i --) {
+			gos.get(i).inputAxis(device, axisName, value);
+		}
+	}
 
 	public World getWorld() {
 		return world;
@@ -369,5 +419,6 @@ public abstract class State{
 	public RayHandler getRayHandler() {
 		return rayHandler;
 	}
+
 	
 }

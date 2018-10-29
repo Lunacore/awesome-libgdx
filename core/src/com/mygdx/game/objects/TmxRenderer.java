@@ -47,7 +47,7 @@ public class TmxRenderer{
 			MapLayer layer = layers.next();
 			
 			parser.load(info.getState().getWorld(), layer);
-	
+		
 			if(layer.getProperties().get("block") == null) continue;
 			if(layer.getProperties().get("block", Boolean.class)) {
 				
@@ -191,7 +191,13 @@ public class TmxRenderer{
 
 				String objClass = props.get("class", String.class);
 				if(objClass != null) {
-					instanceSingle(mos.get(k), layer, layerCount);
+					try {
+						instanceSingle(mos.get(k), layer, layerCount);
+					}
+					catch(Exception e) {
+						System.err.println("Erro ao instanciar objeto da classe " + objClass);
+						//Gdx.app.exit();
+					}
 				}
 				else if(mos.get(k) instanceof TiledMapTileMapObject){
 					instanceImage(mos.get(k), layer, layerCount);
@@ -247,6 +253,11 @@ public class TmxRenderer{
 				return null;
 			}
 		});
+		addKeywordInterpreter(new TmxInstancedKeyword("{body}") {
+			public Object getObject(MapObject mo) {
+				return parser.getBodies().get(mo.getName());
+			}
+		});
 		addKeywordInterpreter(new TmxInstancedKeyword("{center}") {
 			public Object getObject(MapObject mo) {
 				return new Vector2(
@@ -279,6 +290,7 @@ public class TmxRenderer{
 				Vector2 tileSize = new Vector2(tileLayer.getTileWidth(), tileLayer.getTileHeight());
 					
 				//Desenha os tiles
+				sb.begin();
 				for(int x = 0; x < tileLayer.getWidth(); x ++) {
 					for(int y = 0; y < tileLayer.getHeight(); y ++) {
 						Cell cell = tileLayer.getCell(x, y);
@@ -302,6 +314,7 @@ public class TmxRenderer{
 					}
 					
 				}
+				sb.end();
 			}
 		}
 	}

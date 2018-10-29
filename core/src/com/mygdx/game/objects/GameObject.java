@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.helper.Helper;
+import com.mygdx.game.objects.KeyMapper.Device;
 import com.mygdx.game.states.State;
 import com.mygdx.game.structs.Transform;
 
@@ -184,6 +185,9 @@ public abstract class GameObject {
 	protected void renderBodyTexture(SpriteBatch sb, Texture texture, Body body, Transform customTransform) {
 		Helper.renderTex(sb, texture, body.getWorldCenter().add(customTransform.getPosition()), (float)Math.toDegrees(body.getAngle()) + customTransform.getAngle(), customTransform.getScale().cpy().scl(1/State.PHYS_SCALE), false, false);
 	}
+	protected void renderBodyTexture(SpriteBatch sb, Texture texture, Body body, Transform customTransform, boolean flipX, boolean flipY) {
+		Helper.renderTex(sb, texture, body.getWorldCenter().add(customTransform.getPosition()), (float)Math.toDegrees(body.getAngle()) + customTransform.getAngle(), customTransform.getScale().cpy().scl(1/State.PHYS_SCALE), flipX, flipY);
+	}
 	/**Renders the texture to match the body transform (except scale). The transform of the object is used as a relative transform
 	 * (if you want to draw at the exact center, be sure to set the transform position to (0, 0)
 	 * 
@@ -304,6 +308,15 @@ public abstract class GameObject {
 
 	public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
 		return false;
+	}
+	
+	public void inputIn(Device device, String mapName) {	
+	}
+	
+	public void inputOut(Device device, String mapName) {
+	}
+	
+	public void inputAxis(Device device, String axisName, float value) {
 	}
 
 }

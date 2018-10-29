@@ -20,11 +20,16 @@ public class ParallaxBackground extends GameObject{
 		texture = new Texture(get("imgPath", String.class));
 		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 	}
+	
+	public ParallaxBackground(ObjectInfo info, String imagePath) {
+		super(info, new MapProperties());
+		texture = new Texture(imagePath);
+		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+	}
 
 	public void render(SpriteBatch sb, ShapeRenderer sr, OrthographicCamera camera) {
 		Helper.enableBlend();
 		
-		sb.begin();
 		sb.setProjectionMatrix(Helper.getDefaultProjection());
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
@@ -47,7 +52,6 @@ public class ParallaxBackground extends GameObject{
 				false,
 				false
 				);
-		sb.end();
 		sb.setProjectionMatrix(camera.combined);
 	}
 
