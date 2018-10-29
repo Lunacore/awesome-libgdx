@@ -36,11 +36,7 @@ public class AStarPathFinder {
 			return g + h;
 		}
 	}
-	
-	private static float getG(Triangulator.TriangulatedNode node,Triangulator.TriangulatedNode start) {
-		return start.point.cpy().sub(node.point).len();
-	}
-	
+
 	private static float getH(Triangulator.TriangulatedNode node,Triangulator.TriangulatedNode end) {
 		return end.point.cpy().sub(node.point).len();
 	}
@@ -107,7 +103,6 @@ public class AStarPathFinder {
 		//Poe o primeiro ponto na lista aberta
 		openList.add(new AStarNode(startPosition, 0, 0, null));
 		
-		int its = 0;
 		while(openList.size() > 0) {
 			
 			

@@ -1,15 +1,11 @@
 package com.mygdx.game;
 
-import java.util.ArrayList;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.helper.Helper;
-import com.mygdx.game.objects.Triangulator;
-import com.mygdx.game.objects.Triangulator.TriangulatedNode;
 import com.mygdx.game.states.StateManager;
 
 import io.anuke.gif.GifRecorder;

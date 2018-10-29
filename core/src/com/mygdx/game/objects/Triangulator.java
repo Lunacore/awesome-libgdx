@@ -83,26 +83,19 @@ public class Triangulator {
 		
 		for(TriangleIndices ti : trimmed) {
 			
-			boolean A_alreadyExists = true;
-			boolean B_alreadyExists = true;
-			boolean C_alreadyExists = true;
-			
 			TriangulatedNode a = getTriangulated(nodes, vectorpoints.get(ti.a));
 			if(a == null) {
 				a = new TriangulatedNode(vectorpoints.get(ti.a));
-				A_alreadyExists = false;
 			}
 			
 			TriangulatedNode b = getTriangulated(nodes, vectorpoints.get(ti.b));
 			if(b == null) {
 				b = new TriangulatedNode(vectorpoints.get(ti.b));
-				B_alreadyExists = false;
 			}
 			
 			TriangulatedNode c = getTriangulated(nodes, vectorpoints.get(ti.c));
 			if(c == null) {
 				c = new TriangulatedNode(vectorpoints.get(ti.c));
-				C_alreadyExists = false;
 			}
 
 			

@@ -29,7 +29,7 @@ public abstract class EmptyContact implements ContactListener{
 		return false;
 	}
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public <T> T getInstanceFromContact(Contact contact, Class class1) {
 		if(class1.isInstance(contact.getFixtureA().getBody().getUserData())) {
 			return (T) contact.getFixtureA().getBody().getUserData();
