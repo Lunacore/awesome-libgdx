@@ -35,7 +35,7 @@ public abstract class PlatformPlayer extends GameObject{
 		def.position.set(position.cpy().scl(1/State.PHYS_SCALE));
 		def.type = BodyType.DynamicBody;
 		def.fixedRotation = true;
-		Vector2 size = new Vector2(get("width", Float.class), get("height", Float.class));
+		Vector2 size = new Vector2(get("width", Float.class)/2f, get("height", Float.class)/2f);
 		body = Helper.PhysHelp.createBoxBody(getState().getWorld(), size, def);
 		body.getFixtureList().get(0).setFriction(0);
 		Fixture foot = Helper.PhysHelp.createCircleFixture(body, new Vector2(0, -size.y/2f), size.x/2f * 0.9f);

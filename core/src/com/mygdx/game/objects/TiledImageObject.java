@@ -14,13 +14,19 @@ import com.mygdx.game.states.State;
 
 public class TiledImageObject extends GameObject{
 	
-	TiledMapTileMapObject imgObj;
-	Body body;
+	protected TiledMapTileMapObject imgObj;
+	protected Body body;
 	
 	public TiledImageObject(ObjectInfo info, MapProperties properties) {
 		super(info, properties);
-		
 		imgObj = get("this", TiledMapTileMapObject.class);
+		body = get("body", Body.class);
+		
+		if(body != null) {
+			transform.getPosition().set(0, 0);
+			transform.setAngle(0);
+			transform.setScale(new Vector2(imgObj.getScaleX(), imgObj.getScaleY()));
+		}
 	}
 	
 	public TiledImageObject(ObjectInfo info, TiledMapTileMapObject imgObj) {
@@ -33,7 +39,6 @@ public class TiledImageObject extends GameObject{
 			transform.getPosition().set(0, 0);
 			transform.setAngle(0);
 			transform.setScale(new Vector2(imgObj.getScaleX(), imgObj.getScaleY()));
-			System.out.println("xupipo");
 		}
 	}
 

@@ -248,6 +248,15 @@ public class MyTmxMapLoader extends BaseTmxMapLoader<MyTmxMapLoader.Parameters> 
 		return result;
 	}
 	
+	public Element findByAttribute(Element root, String childrenName, String attrName) {
+		for(Element e : root.getChildrenByName(childrenName)) {
+			if(e.getAttribute("name").equals(attrName)) {
+				return e;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	protected void loadObject (TiledMap map, MapObjects objects, Element element, float heightInPixels) {
 		if (element.getName().equals("object")) {
@@ -259,21 +268,47 @@ public class MyTmxMapLoader extends BaseTmxMapLoader<MyTmxMapLoader.Parameters> 
 			/* INSERTION Load Template objects*/
 			//TODO: this here gets only the first object, maybe do a for loop in "element.getChildrenByName("object")" to load all objects
 			if(element.getAttribute("template", null) != null){
+				
 				//load the instance original x, y, width and height
 				float original_x = element.getFloatAttribute("x", 0);
 				float original_y = element.getFloatAttribute("y", 0);
 				float original_width = element.getFloatAttribute("width", 0);
 				float original_height = element.getFloatAttribute("height", 0);
 				float original_rotation = element.getFloatAttribute("rotation", 0);
+				String original_name = element.getAttribute("name", null);
 				int id = element.getIntAttribute("id");
-				Element props = element.getChildByName("properties");
+				Element instanceProps = element.getChildByName("properties");
+				int original_gid = element.getIntAttribute("gid", -1);
+				
 				//overrite the "element" variable with the element wich the file references on "template"
 				String xupipo = parsedFilePath(element.getAttribute("template"), originalMapFileName);
 				element = xml.parse(resolve(xupipo)).getChildByName("object");
 				element.setAttribute("rotation", "" + original_rotation);
 				element.setAttribute("id", "" + id);
-				if(props != null)
-				element.addChild(props);
+				if(original_gid != -1)
+					element.setAttribute("gid", "" + original_gid);
+				if(original_name != null)
+				element.setAttribute("name", original_name);
+				
+				//sobrescreve os que já existem no template, ou cria um novo se não existe
+				if(instanceProps != null) {
+					if(element.getChildByName("properties") == null) {
+						element.addChild(instanceProps);
+					}
+					else {
+						Element templateProps = element.getChildByName("properties");
+						for(Element e : instanceProps.getChildrenByName("property")) {
+							Element sameProperty = findByAttribute(templateProps, "property", e.getAttribute("name"));
+							if(sameProperty != null) {
+								sameProperty.setAttribute("value", e.getAttribute("value"));
+							}
+							else {
+								templateProps.addChild(e);
+							}
+						}
+					}
+				}
+				
 				//translates the template position with the object instance position
 				element.setAttribute("x", "" + (element.getFloatAttribute("x", 0) + original_x / scaleX));
 				element.setAttribute("y", "" + (element.getFloatAttribute("y", 0) + original_y / scaleY));

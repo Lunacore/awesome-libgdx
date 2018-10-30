@@ -84,7 +84,8 @@ public class TmxRenderer{
 						if(value.startsWith(tik.getKeyword())) {
 							if(value.endsWith("_")) {
 								String objectName = value.split("_")[1];
-								Object nOb = tik.getObject(layer.getObjects().get(objectName));
+								MapObject mp = layer.getObjects().get(objectName);
+								Object nOb = tik.getObject(mp);
 								if(nOb == null) {
 									Gdx.app.exit();
 								}
@@ -130,6 +131,8 @@ public class TmxRenderer{
 		if(body != null)
 		props.put("body", body);
 		
+		props.put("this", mo);
+		
 			try {
 				//Pega a classe que vai ser instanciada
 				@SuppressWarnings("rawtypes")
@@ -158,8 +161,9 @@ public class TmxRenderer{
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				System.err.println("Erro ao tentar instanciar objeto da classe " + objClass);
+				System.out.println("eta");
 				e.getTargetException().printStackTrace();
-		
+				System.out.println("porra");
 				Gdx.app.exit();
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
@@ -200,13 +204,7 @@ public class TmxRenderer{
 
 				String objClass = props.get("class", String.class);
 				if(objClass != null) {
-					try {
-						instanceSingle(mos.get(k), layer, layerCount);
-					}
-					catch(Exception e) {
-						System.err.println("Erro ao instanciar objeto da classe " + objClass);
-						//Gdx.app.exit();
-					}
+					instanceSingle(mos.get(k), layer, layerCount);
 				}
 				else if(mos.get(k) instanceof TiledMapTileMapObject){
 					instanceImage(mos.get(k), layer, layerCount);
@@ -264,6 +262,7 @@ public class TmxRenderer{
 		});
 		addKeywordInterpreter(new TmxInstancedKeyword("{body}") {
 			public Object getObject(MapObject mo) {
+				System.out.println(mo);
 				return parser.getBodiesID().get(mo.getProperties().get("id", Integer.class));
 			}
 		});
