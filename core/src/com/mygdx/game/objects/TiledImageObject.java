@@ -3,6 +3,7 @@ package com.mygdx.game.objects;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
@@ -16,6 +17,10 @@ public class TiledImageObject extends GameObject{
 	public TiledImageObject(ObjectInfo info, TiledMapTileMapObject imgObj) {
 		super(info, new MapProperties());
 		this.imgObj = imgObj;
+		
+		for(MapObject mo : imgObj.getTile().getObjects()) {
+			System.out.println("esse obj tem: " + mo.getClass().getSimpleName());
+		}
 	}
 
 	public void render(SpriteBatch sb, ShapeRenderer sr, OrthographicCamera camera) {

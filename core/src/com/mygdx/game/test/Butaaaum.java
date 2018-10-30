@@ -14,9 +14,7 @@ public class Butaaaum extends GameObject{
 	
 	public Butaaaum(ObjectInfo info, MapProperties properties) {
 		super(info, properties);
-		
 		body = get("body", Body.class);
-		
 		System.out.println(body);
 	}
 
