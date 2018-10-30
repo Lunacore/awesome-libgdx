@@ -2,10 +2,11 @@ package com.mygdx.game.objects;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.helper.Helper;
 import com.mygdx.game.states.State;
@@ -28,9 +29,15 @@ public class TiledImageObject extends GameObject{
 
 	public void render(SpriteBatch sb, ShapeRenderer sr, OrthographicCamera camera) {
 		if(imgObj.getProperties().get("render") == null || imgObj.getProperties().get("render", Boolean.class) ) {
+			TextureRegion region = imgObj.getTile().getTextureRegion();
+			if(imgObj.getTile() instanceof AnimatedTiledMapTile) {
+				region = ((AnimatedTiledMapTile)imgObj.getTile()).getCurrentFrame().getTextureRegion();
+				AnimatedTiledMapTile.updateAnimationBaseTime();
+			}
+			
 			Helper.renderRegion(
 					sb,
-					imgObj.getTile().getTextureRegion(),
+					region,
 					new Vector2(imgObj.getX(), imgObj.getY()).cpy().scl(getScale()/State.PHYS_SCALE),
 					360 - imgObj.getRotation(),
 					new Vector2(getScale() * imgObj.getScaleX() / State.PHYS_SCALE, getScale() * imgObj.getScaleY() / State.PHYS_SCALE),
