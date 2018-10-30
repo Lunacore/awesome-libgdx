@@ -70,6 +70,8 @@ public class Helper {
 		renderRegion(sb, region, transform.getPosition(), transform.getAngle(), transform.getScale(), flipX, flipY);
 	}
 	
+	
+	
 	public static void renderRegion(SpriteBatch sb, TextureRegion region, Vector2 position, float angle, Vector2 size,
 			boolean flipX, boolean flipY) {
 	
@@ -79,6 +81,23 @@ public class Helper {
 				position.y - region.getRegionHeight()/2f,
 				region.getRegionWidth()/2f,//originx
 				region.getRegionHeight()/2f,//originy
+				region.getRegionWidth(),//width
+				region.getRegionHeight(),//height
+				size.x * (flipX ? -1 : 1),//scalex
+				size.y * (flipY ? -1 : 1),//scaley
+				angle);
+		
+	}
+	
+	public static void renderRegionNoCenter(SpriteBatch sb, TextureRegion region, Vector2 position, float angle, Vector2 size,
+			boolean flipX, boolean flipY) {
+	
+		sb.draw(
+				region,
+				position.x,
+				position.y,
+				0,//originx
+				0,//originy
 				region.getRegionWidth(),//width
 				region.getRegionHeight(),//height
 				size.x * (flipX ? -1 : 1),//scalex
@@ -510,4 +529,6 @@ public class Helper {
 		
 		return clone;
 	}
+
+
 }

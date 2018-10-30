@@ -169,6 +169,10 @@ public abstract class GameObject {
 		Helper.renderTex(sb, tex, transform, flipX, flipY);
 	}
 	
+	protected void renderBodyRegionNoCenter(SpriteBatch sb, TextureRegion region, Body body, boolean flipX, boolean flipY) {
+		Helper.renderRegionNoCenter(sb, region, body.getWorldCenter().cpy().add(transform.getPosition().cpy().scl(1/State.PHYS_SCALE)), (float)Math.toDegrees(body.getAngle()) + transform.getAngle(), transform.getScale().cpy().scl(1/State.PHYS_SCALE), flipX, flipY);
+	}
+	
 	protected void renderBodyRegion(SpriteBatch sb, TextureRegion region, Body body) {
 		renderBodyRegion(sb, region, body, false, false);
 	}

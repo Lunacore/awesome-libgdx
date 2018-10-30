@@ -17,13 +17,11 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.helper.Helper;
 import com.mygdx.game.states.State;
-
-import net.dermetfan.gdx.physics.box2d.Box2DMapObjectParser;
 
 public class TmxRenderer{
 	
@@ -127,7 +125,10 @@ public class TmxRenderer{
 		
 		MapProperties props = mo.getProperties();
 		String objClass = props.get("class", String.class);
-			
+		
+		Body body = parser.getBodiesID().get(props.get("id", Integer.class), null);
+		if(body != null)
+		props.put("body", body);
 		
 			try {
 				//Pega a classe que vai ser instanciada
@@ -171,6 +172,14 @@ public class TmxRenderer{
 	
 	public void instanceImage(MapObject mo, MapLayer layer, int layerCount) {
 
+		
+		Body body = parser.getBodiesID().get(mo.getProperties().get("id", Integer.class));
+		
+		if(body != null)
+			mo.getProperties().put("body", body);
+		
+		System.out.println(mo.getProperties().get("body"));
+		
 		TiledImageObject io = new TiledImageObject(new ObjectInfo(info.getState(), layerCount, info.getScale()), (TiledMapTileMapObject) mo);
 		info.getState().putInScene(io);
 		instancedObjects.put(mo.getProperties().get("id", Integer.class), io);

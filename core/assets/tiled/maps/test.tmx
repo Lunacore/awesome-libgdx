@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="800" tileheight="600" infinite="0" nextlayerid="2" nextobjectid="34">
+<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="800" tileheight="600" infinite="0" nextlayerid="2" nextobjectid="37">
  <tileset firstgid="1" source="../tilesets/componentes.tsx"/>
  <objectgroup id="1" name="bijeto">
   <object id="32" template="../templates/button_1.tx" x="364" y="230"/>
-  <object id="33" template="../templates/button_1.tx" x="41.5066" y="360.151" width="117" height="215.116" rotation="-288.317">
+  <object id="33" template="../templates/button_1.tx" x="41.5066" y="360.151" width="117" height="215.116" rotation="-288.317"/>
+  <object id="34" template="../templates/canto.tx" x="367" y="468"/>
+  <object id="35" type="object" gid="1" x="37" y="168" width="197" height="145">
    <properties>
-    <property name="class" value="com.mygdx.game.test.Animacao"/>
-    <property name="this" value="{this}"/>
+    <property name="bodyType" value="DynamicBody"/>
+    <property name="fixedRotation" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="36" type="object" x="204" y="238" width="106" height="54">
+   <properties>
+    <property name="bodyType" value="DynamicBody"/>
    </properties>
   </object>
  </objectgroup>

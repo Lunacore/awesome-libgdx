@@ -8,12 +8,14 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.helper.Helper;
 import com.mygdx.game.states.State;
 
 public class TiledImageObject extends GameObject{
 	
 	TiledMapTileMapObject imgObj;
+	Body body;
 	
 	public TiledImageObject(ObjectInfo info, MapProperties properties) {
 		super(info, properties);
@@ -22,9 +24,17 @@ public class TiledImageObject extends GameObject{
 	}
 	
 	public TiledImageObject(ObjectInfo info, TiledMapTileMapObject imgObj) {
-		super(info, new MapProperties());
+		super(info, imgObj.getProperties());
 		this.imgObj = imgObj;
-
+		
+		body = get("body", Body.class);
+		
+		if(body != null) {
+			transform.getPosition().set(0, 0);
+			transform.setAngle(0);
+			transform.setScale(new Vector2(imgObj.getScaleX(), imgObj.getScaleY()));
+			System.out.println("xupipo");
+		}
 	}
 
 	public void render(SpriteBatch sb, ShapeRenderer sr, OrthographicCamera camera) {
@@ -35,16 +45,21 @@ public class TiledImageObject extends GameObject{
 				AnimatedTiledMapTile.updateAnimationBaseTime();
 			}
 			
-			Helper.renderRegion(
-					sb,
-					region,
-					new Vector2(imgObj.getX(), imgObj.getY()).cpy().scl(getScale()/State.PHYS_SCALE),
-					360 - imgObj.getRotation(),
-					new Vector2(getScale() * imgObj.getScaleX() / State.PHYS_SCALE, getScale() * imgObj.getScaleY() / State.PHYS_SCALE),
-					imgObj.isFlipHorizontally(),
-					imgObj.isFlipVertically(),
-					new Vector2(getScale() * imgObj.getOriginX() / State.PHYS_SCALE, getScale() * imgObj.getOriginY() / State.PHYS_SCALE)
-					);
+			if(body != null) {
+				renderBodyRegionNoCenter(sb, region, body, imgObj.isFlipHorizontally(), imgObj.isFlipVertically());
+			}
+			else {
+				Helper.renderRegion(
+						sb,
+						region,
+						new Vector2(imgObj.getX(), imgObj.getY()).cpy().scl(getScale()/State.PHYS_SCALE),
+						360 - imgObj.getRotation(),
+						new Vector2(getScale() * imgObj.getScaleX() / State.PHYS_SCALE, getScale() * imgObj.getScaleY() / State.PHYS_SCALE),
+						imgObj.isFlipHorizontally(),
+						imgObj.isFlipVertically(),
+						new Vector2(getScale() * imgObj.getOriginX() / State.PHYS_SCALE, getScale() * imgObj.getOriginY() / State.PHYS_SCALE)
+						);
+			}
 	}
 		
 	}

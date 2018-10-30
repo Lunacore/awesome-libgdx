@@ -9,6 +9,10 @@
    </object>
    <object id="13" x="158" y="-154" width="95" height="185"/>
   </objectgroup>
+  <animation>
+   <frame tileid="0" duration="50"/>
+   <frame tileid="1" duration="500"/>
+  </animation>
  </tile>
  <tile id="1">
   <image width="457" height="210" source="../resources/botao 2.png"/>
@@ -17,12 +21,6 @@
     <polygon points="0,0 -4,41 35,41 35,127 411,128 406,45 452,43 443,-1 388,-4 363,-57 76,-60 53,-1"/>
    </object>
   </objectgroup>
-  <animation>
-   <frame tileid="1" duration="100"/>
-   <frame tileid="7" duration="100"/>
-   <frame tileid="2" duration="100"/>
-   <frame tileid="0" duration="100"/>
-  </animation>
  </tile>
  <tile id="2">
   <image width="236" height="389" source="../resources/emissor 1.png"/>
@@ -51,6 +49,10 @@
  </tile>
  <tile id="7">
   <image width="374" height="356" source="../resources/refletor.png"/>
+  <animation>
+   <frame tileid="7" duration="10"/>
+   <frame tileid="8" duration="10"/>
+  </animation>
  </tile>
  <tile id="8">
   <image width="374" height="356" source="../resources/refletor_.png"/>
