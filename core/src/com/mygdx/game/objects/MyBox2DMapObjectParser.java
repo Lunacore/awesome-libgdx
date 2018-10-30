@@ -510,6 +510,9 @@ public class MyBox2DMapObjectParser {
 			return null;
 		Body body = createBody(world, object);
 		createFixtures(object, body, 0);
+	
+		float rotation = object.getProperties().get("rotation", 0f, Float.class);
+		body.setTransform(body.getWorldCenter(), -(float) Math.toRadians(rotation));
 		return body;
 	}
 
@@ -568,7 +571,20 @@ public class MyBox2DMapObjectParser {
 		} else if(mapObject instanceof PolygonMapObject || mapObject instanceof PolylineMapObject) {
 			FloatArray vertices = Pools.obtain(FloatArray.class);
 			vertices.clear();
-			vertices.addAll(mapObject instanceof PolygonMapObject ? ((PolygonMapObject) mapObject).getPolygon().getTransformedVertices() : ((PolylineMapObject) mapObject).getPolyline().getTransformedVertices());
+						
+			if(mapObject instanceof PolygonMapObject) {
+				((PolygonMapObject) mapObject).getPolygon().setRotation(0);
+			}
+			if(mapObject instanceof PolylineMapObject) {
+				((PolylineMapObject) mapObject).getPolyline().setRotation(0);
+			}
+			
+			vertices.addAll(
+					mapObject instanceof PolygonMapObject ?
+					((PolygonMapObject) mapObject).getPolygon().getTransformedVertices() :
+					((PolylineMapObject) mapObject).getPolyline().getTransformedVertices()
+				);
+			
 			for(int ix = 0, iy = 1; iy < vertices.size; ix += 2, iy += 2) {
 				vec3.set(vertices.get(ix), vertices.get(iy), 0);
 				vec3.mul(mat4);
@@ -643,8 +659,6 @@ public class MyBox2DMapObjectParser {
 			return null;
 		
 		String tabs = ""; for(int i = 0; i < level; i ++) tabs+="\t";
-
-		System.out.println(tabs + "Begin load " + mapObject.getClass().getSimpleName());
 		
 		/* CUSTOM ROTCIV INSERTION */
 		if(mapObject instanceof TiledMapTileMapObject) {
@@ -672,7 +686,6 @@ public class MyBox2DMapObjectParser {
 					
 					pmo.getPolygon().setScale(scaleX, scaleY);
 					pmo.getPolygon().setRotation(-tmo.getRotation());
-					pmo.getPolygon().setOrigin(tmo.getOriginX(), tmo.getOriginY());
 				}
 				else if(mo instanceof RectangleMapObject) {
 					RectangleMapObject rect = (RectangleMapObject) mo;
@@ -689,7 +702,7 @@ public class MyBox2DMapObjectParser {
 					circ.getEllipse().height *= tmo.getScaleX();
 				}
 				else {
-					System.out.println(tabs + "AA");
+					
 				}
 				
 				//mapObject = mo;
@@ -699,7 +712,6 @@ public class MyBox2DMapObjectParser {
 			Fixture[] arr = new Fixture[list.size()];
 			list.toArray(arr);
 			
-			System.out.println(tabs + "is rec tileobject");
 			
 			return arr;
 		}
@@ -708,9 +720,10 @@ public class MyBox2DMapObjectParser {
 		Polygon polygon;
 
 		if(!(mapObject instanceof PolygonMapObject) || isConvex(polygon = ((PolygonMapObject) mapObject).getPolygon()) && (!Box2DUtils.checkPreconditions || polygon.getVertices().length / 2 <= Box2DUtils.maxPolygonVertices)) {
-			System.out.println(tabs + "is convex");
 			return new Fixture[] {createFixture(mapObject, body)};
 		}
+		
+		polygon.setRotation(0);
 
 		Polygon[] convexPolygons = triangulate ? triangulate(polygon) : decompose(polygon);
 		Fixture[] fixtures = new Fixture[convexPolygons.length];
@@ -723,7 +736,6 @@ public class MyBox2DMapObjectParser {
 			convexObject.getProperties().putAll(mapObject.getProperties());
 			fixtures[i] = createFixture(convexObject, body);
 		}
-		System.out.println(tabs + "is notconvex");
 		return fixtures;
 	}
 

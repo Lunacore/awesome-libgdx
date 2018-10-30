@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="800" tileheight="600" infinite="0" nextlayerid="2" nextobjectid="26">
+<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="800" tileheight="600" infinite="0" nextlayerid="2" nextobjectid="34">
  <tileset firstgid="1" source="../tilesets/componentes.tsx"/>
  <objectgroup id="1" name="bijeto">
-  <object id="21" type="object" gid="1" x="64" y="474" width="133.074" height="67"/>
-  <object id="23" type="object" gid="1" x="36" y="80" width="133.074" height="67"/>
-  <object id="24" type="object" gid="1" x="349.463" y="218.5" width="133.074" height="67"/>
-  <object id="25" type="object" gid="1" x="485.463" y="398.5" width="133.074" height="67"/>
+  <object id="32" template="../templates/button_1.tx" x="364" y="230"/>
+  <object id="33" template="../templates/button_1.tx" x="41.5066" y="360.151" width="117" height="215.116" rotation="-288.317">
+   <properties>
+    <property name="class" value="com.mygdx.game.test.Animacao"/>
+    <property name="this" value="{this}"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

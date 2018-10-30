@@ -14,13 +14,16 @@ public class TiledImageObject extends GameObject{
 	
 	TiledMapTileMapObject imgObj;
 	
+	public TiledImageObject(ObjectInfo info, MapProperties properties) {
+		super(info, properties);
+		
+		imgObj = get("this", TiledMapTileMapObject.class);
+	}
+	
 	public TiledImageObject(ObjectInfo info, TiledMapTileMapObject imgObj) {
 		super(info, new MapProperties());
 		this.imgObj = imgObj;
-		
-		for(MapObject mo : imgObj.getTile().getObjects()) {
-			System.out.println("esse obj tem: " + mo.getClass().getSimpleName());
-		}
+
 	}
 
 	public void render(SpriteBatch sb, ShapeRenderer sr, OrthographicCamera camera) {

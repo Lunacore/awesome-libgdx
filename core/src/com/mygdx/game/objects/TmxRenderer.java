@@ -40,7 +40,7 @@ public class TmxRenderer{
 		instancedObjects = new HashMap<Integer, GameObject>();
 		keywords = new ArrayList<TmxInstancedKeyword>();
 		loadDefaultKeywords();
-		setTiledMap(new TmxMapLoader().load(mapPath));
+		setTiledMap(new MyTmxMapLoader().load(mapPath));
 		scaleVector = new Vector2(info.getScale() / State.PHYS_SCALE, info.getScale() / State.PHYS_SCALE);
 		Iterator<MapLayer> layers = getTiledMap().getLayers().iterator();
 		while(layers.hasNext()) {

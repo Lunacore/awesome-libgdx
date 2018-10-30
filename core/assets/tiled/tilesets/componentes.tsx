@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="componentes" tilewidth="629" tileheight="606" tilecount="9" columns="0">
+<tileset version="1.2" tiledversion="1.2.0" name="componentes" tilewidth="629" tileheight="606" tilecount="9" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="431" height="217" source="../resources/botao 1.png"/>
@@ -17,6 +17,12 @@
     <polygon points="0,0 -4,41 35,41 35,127 411,128 406,45 452,43 443,-1 388,-4 363,-57 76,-60 53,-1"/>
    </object>
   </objectgroup>
+  <animation>
+   <frame tileid="1" duration="100"/>
+   <frame tileid="7" duration="100"/>
+   <frame tileid="2" duration="100"/>
+   <frame tileid="0" duration="100"/>
+  </animation>
  </tile>
  <tile id="2">
   <image width="236" height="389" source="../resources/emissor 1.png"/>

@@ -450,10 +450,8 @@ public class Helper {
 			
 		}
 		else if(mo instanceof PolygonMapObject) {
-			clone = new PolygonMapObject();
-			
-			((PolygonMapObject)clone).getPolygon().setVertices(((PolygonMapObject) mo).getPolygon().getVertices());
-			
+			clone = new PolygonMapObject(((PolygonMapObject) mo).getPolygon().getVertices().clone());
+						
 			((PolygonMapObject)clone).getPolygon().setPosition(
 					((PolygonMapObject) mo).getPolygon().getX(),
 					((PolygonMapObject) mo).getPolygon().getY());
@@ -470,9 +468,7 @@ public class Helper {
 					((PolygonMapObject) mo).getPolygon().getScaleY());
 		}
 		else if(mo instanceof PolylineMapObject) {
-			clone = new PolylineMapObject();
-			
-			((PolylineMapObject)clone).getPolyline().setVertices(((PolylineMapObject) mo).getPolyline().getVertices());
+			clone = new PolylineMapObject(((PolylineMapObject) mo).getPolyline().getVertices().clone());
 			
 			((PolylineMapObject)clone).getPolyline().setPosition(
 					((PolylineMapObject) mo).getPolyline().getX(),

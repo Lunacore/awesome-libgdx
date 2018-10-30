@@ -12,6 +12,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.ImageResolver;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.ImageResolver.AssetManagerImageResolver;
 import com.badlogic.gdx.maps.ImageResolver.DirectImageResolver;
 import com.badlogic.gdx.maps.MapObject;
@@ -54,6 +56,8 @@ public class MyTmxMapLoader extends BaseTmxMapLoader<MyTmxMapLoader.Parameters> 
 	public MyTmxMapLoader (FileHandleResolver resolver) {
 		super(resolver);
 	}
+	
+	String originalMapFileName;
 
 	/** Loads the {@link TiledMap} from the given file. The file is resolved via the {@link FileHandleResolver} set in the
 	 * constructor of this class. By default it will resolve to an internal file. The map will be loaded for a y-up coordinate
@@ -61,6 +65,7 @@ public class MyTmxMapLoader extends BaseTmxMapLoader<MyTmxMapLoader.Parameters> 
 	 * @param fileName the filename
 	 * @return the TiledMap */
 	public TiledMap load (String fileName) {
+		originalMapFileName = fileName;
 		return load(fileName, new MyTmxMapLoader.Parameters());
 	}
 
@@ -212,26 +217,63 @@ public class MyTmxMapLoader extends BaseTmxMapLoader<MyTmxMapLoader.Parameters> 
 		return map;
 	}
 	
+	public String removeLastFolder(String folder) {
+		
+		String result = "";
+		
+		String split[] = folder.split("/");
+		for(int i = 0; i < split.length - 1; i ++) {
+			result += split[i] + "/";
+		}
+		
+		return result;
+	}
+	
+	public String parsedFilePath(String relativePath, String referencePath) {
+		
+		String result = removeLastFolder(referencePath);
+		
+		String[] steps = relativePath.split("/");
+		
+		for(String s : steps) {
+			if(s.equals("..")) {
+				result = removeLastFolder(result);
+			}
+			else {
+				result += s + "/";
+			}
+		}
+		
+		result = result.substring(0, result.length() - 1);
+		return result;
+	}
+	
 	@Override
 	protected void loadObject (TiledMap map, MapObjects objects, Element element, float heightInPixels) {
 		if (element.getName().equals("object")) {
 			MapObject object = null;
-			
+						
 			float scaleX = convertObjectToTileSpace ? 1.0f / mapTileWidth : 1.0f;
 			float scaleY = convertObjectToTileSpace ? 1.0f / mapTileHeight : 1.0f;
 			
-			/* INSERTION */
+			/* INSERTION Load Template objects*/
 			//TODO: this here gets only the first object, maybe do a for loop in "element.getChildrenByName("object")" to load all objects
-			if(element.getAttribute("template") != null){
+			if(element.getAttribute("template", null) != null){
 				//load the instance original x, y, width and height
 				float original_x = element.getFloatAttribute("x", 0);
 				float original_y = element.getFloatAttribute("y", 0);
 				float original_width = element.getFloatAttribute("width", 0);
 				float original_height = element.getFloatAttribute("height", 0);
-		
+				float original_rotation = element.getFloatAttribute("rotation", 0);
+				int id = element.getIntAttribute("id");
+				Element props = element.getChildByName("properties");
 				//overrite the "element" variable with the element wich the file references on "template"
-				element = xml.parse(resolve(element.getAttribute("template"))).getChildByName("object");
-				
+				String xupipo = parsedFilePath(element.getAttribute("template"), originalMapFileName);
+				element = xml.parse(resolve(xupipo)).getChildByName("object");
+				element.setAttribute("rotation", "" + original_rotation);
+				element.setAttribute("id", "" + id);
+				if(props != null)
+				element.addChild(props);
 				//translates the template position with the object instance position
 				element.setAttribute("x", "" + (element.getFloatAttribute("x", 0) + original_x / scaleX));
 				element.setAttribute("y", "" + (element.getFloatAttribute("y", 0) + original_y / scaleY));
