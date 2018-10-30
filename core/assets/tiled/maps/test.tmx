@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="1280" tileheight="720" infinite="0" nextobjectid="9">
+<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="800" tileheight="600" infinite="0" nextlayerid="2" nextobjectid="26">
  <tileset firstgid="1" source="../tilesets/componentes.tsx"/>
- <objectgroup name="bijeto">
-  <object id="5" type="object" gid="2" x="34.6667" y="706.333" width="457" height="210"/>
-  <object id="6" type="object" gid="1" x="247.667" y="450.667" width="881.667" height="217">
-   <properties>
-    <property name="body" value="{body}"/>
-    <property name="class" value="com.mygdx.game.test.Butaaaum"/>
-   </properties>
-  </object>
+ <objectgroup id="1" name="bijeto">
+  <object id="21" type="object" gid="1" x="64" y="474" width="133.074" height="67"/>
+  <object id="23" type="object" gid="1" x="36" y="80" width="133.074" height="67"/>
+  <object id="24" type="object" gid="1" x="349.463" y="218.5" width="133.074" height="67"/>
+  <object id="25" type="object" gid="1" x="485.463" y="398.5" width="133.074" height="67"/>
  </objectgroup>
 </map>

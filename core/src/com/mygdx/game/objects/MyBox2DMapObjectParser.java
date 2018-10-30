@@ -72,6 +72,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.mygdx.game.helper.Helper;
 import com.mygdx.game.objects.MyBox2DMapObjectParser.Listener.Adapter;
 
 import net.dermetfan.gdx.physics.box2d.Box2DUtils;
@@ -508,7 +509,7 @@ public class MyBox2DMapObjectParser {
 		if((object = listener.createObject(object)) == null)
 			return null;
 		Body body = createBody(world, object);
-		createFixtures(object, body);
+		createFixtures(object, body, 0);
 		return body;
 	}
 
@@ -632,69 +633,84 @@ public class MyBox2DMapObjectParser {
 			list.add(f);
 		}
 	}
-
+	
 	/** creates {@link Fixture Fixtures} from a {@link MapObject}
 	 *  @param mapObject the {@link MapObject} to parse
 	 *  @param body the {@link Body} to create the {@link Fixture Fixtures} on
 	 *  @return an array of parsed {@link Fixture Fixtures} */
-	public Fixture[] createFixtures(MapObject mapObject, Body body) {
+	public Fixture[] createFixtures(MapObject mapObject, Body body, int level) {
 		if((mapObject = listener.createFixtures(mapObject)) == null)
 			return null;
 		
+		String tabs = ""; for(int i = 0; i < level; i ++) tabs+="\t";
+
+		System.out.println(tabs + "Begin load " + mapObject.getClass().getSimpleName());
+		
+		/* CUSTOM ROTCIV INSERTION */
 		if(mapObject instanceof TiledMapTileMapObject) {
-			if(((TiledMapTileMapObject) mapObject).getTile().getObjects().getCount() == 0) return null;
-			
 			TiledMapTileMapObject tmo = (TiledMapTileMapObject) mapObject;
 			
-
+			if(tmo.getTile().getObjects().getCount() == 0) return null;
+			
+			float scaleX = tmo.getScaleX();
+			float scaleY = tmo.getScaleY();
+			float x = tmo.getX();
+			float y = tmo.getY();
 			
 			ArrayList<Fixture> list = new ArrayList<Fixture>();
-			for(MapObject mo : tmo.getTile().getObjects()) {
+			for(MapObject m : tmo.getTile().getObjects()) {
+				
+				//eu deveria clonar o "mo"
+				MapObject mo = Helper.cloneMapObject(m);
+				
 				if(mo instanceof PolygonMapObject) {
 					PolygonMapObject pmo = (PolygonMapObject) mo;
 					
-					pmo.getPolygon().setScale(tmo.getScaleX(), tmo.getScaleY());
-					pmo.getPolygon().setRotation(tmo.getRotation());
-										
 					pmo.getPolygon().setPosition(
-							pmo.getPolygon().getX()*tmo.getScaleX() + tmo.getX(),
-							pmo.getPolygon().getY()*tmo.getScaleY() + tmo.getY());
+							pmo.getPolygon().getX() * scaleX + x,
+							pmo.getPolygon().getY() * scaleY + y);
 					
+					pmo.getPolygon().setScale(scaleX, scaleY);
+					pmo.getPolygon().setRotation(-tmo.getRotation());
 					pmo.getPolygon().setOrigin(tmo.getOriginX(), tmo.getOriginY());
 				}
 				else if(mo instanceof RectangleMapObject) {
 					RectangleMapObject rect = (RectangleMapObject) mo;
-					rect.getRectangle().setX(rect.getRectangle().getX()*tmo.getScaleX() + tmo.getX());
-					rect.getRectangle().setY(rect.getRectangle().getY()*tmo.getScaleY() + tmo.getY());
-					rect.getRectangle().setWidth(rect.getRectangle().getWidth() * tmo.getScaleX());
-					rect.getRectangle().setHeight(rect.getRectangle().getHeight() * tmo.getScaleY());
+					rect.getRectangle().setX(rect.getRectangle().getX() * scaleX + x);
+					rect.getRectangle().setY(rect.getRectangle().getY() * scaleY + y);
+					rect.getRectangle().setWidth(rect.getRectangle().getWidth() * scaleX);
+					rect.getRectangle().setHeight(rect.getRectangle().getHeight() * scaleY);
 				}
 				else if(mo instanceof EllipseMapObject) {
 					EllipseMapObject circ = (EllipseMapObject) mo;
-					System.out.println("ellipse");
 					circ.getEllipse().x = circ.getEllipse().x * tmo.getScaleX() + tmo.getX();
 					circ.getEllipse().y = circ.getEllipse().y * tmo.getScaleY() + tmo.getY();
 					circ.getEllipse().width *= tmo.getScaleX();
 					circ.getEllipse().height *= tmo.getScaleX();
 				}
 				else {
-					System.out.println("sei o q é naum: " + mo.getClass().getSimpleName());
+					System.out.println(tabs + "AA");
 				}
 				
-				mapObject = mo;
-				addArrayToList(createFixtures(mo, body), list);
+				//mapObject = mo;
+				addArrayToList(createFixtures(mo, body, level + 1), list);
 			}
-			
+
 			Fixture[] arr = new Fixture[list.size()];
-			
 			list.toArray(arr);
+			
+			System.out.println(tabs + "is rec tileobject");
+			
 			return arr;
 		}
-
+		/* CUSTOM ROTCIV INSERTION */
+		
 		Polygon polygon;
 
-		if(!(mapObject instanceof PolygonMapObject) || isConvex(polygon = ((PolygonMapObject) mapObject).getPolygon()) && (!Box2DUtils.checkPreconditions || polygon.getVertices().length / 2 <= Box2DUtils.maxPolygonVertices))
+		if(!(mapObject instanceof PolygonMapObject) || isConvex(polygon = ((PolygonMapObject) mapObject).getPolygon()) && (!Box2DUtils.checkPreconditions || polygon.getVertices().length / 2 <= Box2DUtils.maxPolygonVertices)) {
+			System.out.println(tabs + "is convex");
 			return new Fixture[] {createFixture(mapObject, body)};
+		}
 
 		Polygon[] convexPolygons = triangulate ? triangulate(polygon) : decompose(polygon);
 		Fixture[] fixtures = new Fixture[convexPolygons.length];
@@ -707,7 +723,7 @@ public class MyBox2DMapObjectParser {
 			convexObject.getProperties().putAll(mapObject.getProperties());
 			fixtures[i] = createFixture(convexObject, body);
 		}
-
+		System.out.println(tabs + "is notconvex");
 		return fixtures;
 	}
 
@@ -720,7 +736,7 @@ public class MyBox2DMapObjectParser {
 	/** {@link #createFixtures(MapObject, Body) creates} the fixtures from the given {@link MapObject} on the associated body in {@link #bodies}
 	 *  @see #createFixtures(MapObject, Body) */
 	public Fixture[] createFixtures(MapObject mapObject) {
-		return createFixtures(mapObject, findBody(mapObject, heritage, mapProperties, layerProperties));
+		return createFixtures(mapObject, findBody(mapObject, heritage, mapProperties, layerProperties), 0);
 	}
 
 	/** transforms the given matrix according to the given orientation

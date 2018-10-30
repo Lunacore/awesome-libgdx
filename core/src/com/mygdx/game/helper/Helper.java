@@ -13,7 +13,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.CircleMapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.maps.objects.PolylineMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -421,4 +429,89 @@ public class Helper {
 		return (1 - alpha)  * a + alpha * b;
 	}
 
+	public static MapObject cloneMapObject(MapObject mo) {
+		
+		MapObject clone;
+
+		if(mo instanceof CircleMapObject) {
+			clone = new CircleMapObject();
+			((CircleMapObject) clone).getCircle().set(
+					((CircleMapObject) mo).getCircle().x,
+					((CircleMapObject) mo).getCircle().y,
+					((CircleMapObject) mo).getCircle().radius);
+		}
+		else if(mo instanceof EllipseMapObject) {
+			clone = new EllipseMapObject();
+			((EllipseMapObject)clone).getEllipse().set(
+					((EllipseMapObject) mo).getEllipse().x,
+					((EllipseMapObject) mo).getEllipse().y,
+					((EllipseMapObject) mo).getEllipse().width,
+					((EllipseMapObject) mo).getEllipse().height);
+			
+		}
+		else if(mo instanceof PolygonMapObject) {
+			clone = new PolygonMapObject();
+			
+			((PolygonMapObject)clone).getPolygon().setVertices(((PolygonMapObject) mo).getPolygon().getVertices());
+			
+			((PolygonMapObject)clone).getPolygon().setPosition(
+					((PolygonMapObject) mo).getPolygon().getX(),
+					((PolygonMapObject) mo).getPolygon().getY());
+			
+			((PolygonMapObject)clone).getPolygon().setOrigin(
+					((PolygonMapObject) mo).getPolygon().getOriginX(),
+					((PolygonMapObject) mo).getPolygon().getOriginY());
+			
+			((PolygonMapObject)clone).getPolygon().setRotation(
+					((PolygonMapObject) mo).getPolygon().getRotation());
+			
+			((PolygonMapObject)clone).getPolygon().setScale(
+					((PolygonMapObject) mo).getPolygon().getScaleX(),
+					((PolygonMapObject) mo).getPolygon().getScaleY());
+		}
+		else if(mo instanceof PolylineMapObject) {
+			clone = new PolylineMapObject();
+			
+			((PolylineMapObject)clone).getPolyline().setVertices(((PolylineMapObject) mo).getPolyline().getVertices());
+			
+			((PolylineMapObject)clone).getPolyline().setPosition(
+					((PolylineMapObject) mo).getPolyline().getX(),
+					((PolylineMapObject) mo).getPolyline().getY());
+			
+			((PolylineMapObject)clone).getPolyline().setOrigin(
+					((PolylineMapObject) mo).getPolyline().getOriginX(),
+					((PolylineMapObject) mo).getPolyline().getOriginY());
+			
+			((PolylineMapObject)clone).getPolyline().setRotation(
+					((PolylineMapObject) mo).getPolyline().getRotation());
+			
+			((PolylineMapObject)clone).getPolyline().setScale(
+					((PolylineMapObject) mo).getPolyline().getScaleX(),
+					((PolylineMapObject) mo).getPolyline().getScaleY());
+		}
+		else if(mo instanceof RectangleMapObject) {
+			clone = new RectangleMapObject();
+			
+			((RectangleMapObject)clone).getRectangle().set(
+					((RectangleMapObject) mo).getRectangle().x,
+					((RectangleMapObject) mo).getRectangle().y,
+					((RectangleMapObject) mo).getRectangle().width,
+					((RectangleMapObject) mo).getRectangle().height);
+			
+		}
+		else if(mo instanceof TextureMapObject) {
+			clone = new TextureMapObject();
+			
+			((TextureMapObject)clone).setTextureRegion(((TextureMapObject) mo).getTextureRegion());
+		}
+		else {
+			clone = new MapObject();
+		}
+		
+		clone.setColor(mo.getColor().cpy());
+		clone.setName(mo.getName());
+		clone.setOpacity(mo.getOpacity());
+		
+		return clone;
+	}
 }
