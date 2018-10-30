@@ -29,14 +29,14 @@ public class TmxRenderer{
 	
 	private TiledMap tiledMap;
 	Vector2 scaleVector;
-	Box2DMapObjectParser parser;
+	MyBox2DMapObjectParser parser;
 	HashMap<Integer, GameObject> instancedObjects;
 	ArrayList<TmxInstancedKeyword> keywords;
 	ObjectInfo info;
 	
 	public TmxRenderer(ObjectInfo info, String mapPath) {
 		this.info = info;
-		parser = new Box2DMapObjectParser(info.getScale()/State.PHYS_SCALE);
+		parser = new MyBox2DMapObjectParser(info.getScale()/State.PHYS_SCALE);
 		instancedObjects = new HashMap<Integer, GameObject>();
 		keywords = new ArrayList<TmxInstancedKeyword>();
 		loadDefaultKeywords();
@@ -255,7 +255,7 @@ public class TmxRenderer{
 		});
 		addKeywordInterpreter(new TmxInstancedKeyword("{body}") {
 			public Object getObject(MapObject mo) {
-				return parser.getBodies().get(mo.getName());
+				return parser.getBodiesID().get(mo.getProperties().get("id", Integer.class));
 			}
 		});
 		addKeywordInterpreter(new TmxInstancedKeyword("{center}") {

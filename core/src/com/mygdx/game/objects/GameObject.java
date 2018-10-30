@@ -43,6 +43,11 @@ public abstract class GameObject {
 		this.render = render;
 	}
 	
+	public <T> T getNonNull(String key, Class<T> cls, T ifnull) {
+		if(properties.get(key) == null) return ifnull;
+		return properties.get(key, cls);
+	}
+	
 	public <T> T get(String key, Class<T> cls) {
 		return properties.get(key, cls);
 	}
