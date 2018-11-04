@@ -57,12 +57,12 @@ public class TiledImageObject extends GameObject{
 				Helper.renderRegion(
 						sb,
 						region,
-						new Vector2(imgObj.getX(), imgObj.getY()).cpy().scl(getScale()/State.PHYS_SCALE),
+						new Vector2(imgObj.getX(), imgObj.getY()).cpy().scl(getMapScale()/State.PHYS_SCALE),
 						360 - imgObj.getRotation(),
-						new Vector2(getScale() * imgObj.getScaleX() / State.PHYS_SCALE, getScale() * imgObj.getScaleY() / State.PHYS_SCALE),
+						new Vector2(getMapScale() * imgObj.getScaleX() / State.PHYS_SCALE, getMapScale() * imgObj.getScaleY() / State.PHYS_SCALE),
 						imgObj.isFlipHorizontally(),
 						imgObj.isFlipVertically(),
-						new Vector2(getScale() * imgObj.getOriginX() / State.PHYS_SCALE, getScale() * imgObj.getOriginY() / State.PHYS_SCALE)
+						new Vector2(getMapScale() * imgObj.getOriginX() / State.PHYS_SCALE, getMapScale() * imgObj.getOriginY() / State.PHYS_SCALE)
 						);
 			}
 	}

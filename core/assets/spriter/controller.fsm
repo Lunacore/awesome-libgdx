@@ -1,0 +1,226 @@
+<!DOCTYPE FSM>
+<FSM>
+    <statemachine>
+        <name></name>
+        <comment></comment>
+        <initialstate>IDLE_RUN</initialstate>
+        <state>
+            <name>IDLE_RUN</name>
+            <comment></comment>
+            <incomeactions/>
+            <outcomeactions/>
+            <transitions>
+                <transition type="simple">
+                    <name>REQUEST_JUMP</name>
+                    <comment></comment>
+                    <condition></condition>
+                    <destination>JUMP_BEGIN</destination>
+                    <transite_destination>JUMP_BEGIN</transite_destination>
+                    <transitionactions/>
+                </transition>
+                <transition type="simple">
+                    <name>ON_AIR</name>
+                    <comment></comment>
+                    <condition></condition>
+                    <destination>JUMP_LOOP</destination>
+                    <transite_destination>JUMP_LOOP</transite_destination>
+                    <transitionactions/>
+                </transition>
+            </transitions>
+        </state>
+        <state>
+            <name>JUMP_BEGIN</name>
+            <comment></comment>
+            <incomeactions/>
+            <outcomeactions/>
+            <transitions>
+                <transition type="simple">
+                    <name>BEGIN_FINISH</name>
+                    <comment></comment>
+                    <condition></condition>
+                    <destination>JUMP_LOOP</destination>
+                    <transite_destination>JUMP_LOOP</transite_destination>
+                    <transitionactions/>
+                </transition>
+                <transition type="simple">
+                    <name>STEP_ON_FLOOR</name>
+                    <comment></comment>
+                    <condition></condition>
+                    <destination>JUMP_END</destination>
+                    <transite_destination>JUMP_END</transite_destination>
+                    <transitionactions/>
+                </transition>
+            </transitions>
+        </state>
+        <state>
+            <name>JUMP_END</name>
+            <comment></comment>
+            <incomeactions/>
+            <outcomeactions/>
+            <transitions>
+                <transition type="simple">
+                    <name>END_FINISH</name>
+                    <comment></comment>
+                    <condition></condition>
+                    <destination>IDLE_RUN</destination>
+                    <transite_destination>IDLE_RUN</transite_destination>
+                    <transitionactions/>
+                </transition>
+            </transitions>
+        </state>
+        <state>
+            <name>JUMP_LOOP</name>
+            <comment></comment>
+            <incomeactions/>
+            <outcomeactions/>
+            <transitions>
+                <transition type="simple">
+                    <name>STEP_ON_FLOOR</name>
+                    <comment></comment>
+                    <condition></condition>
+                    <destination>JUMP_END</destination>
+                    <transite_destination>JUMP_END</transite_destination>
+                    <transitionactions/>
+                </transition>
+                <transition type="simple">
+                    <name>REQUEST_JUMP</name>
+                    <comment></comment>
+                    <condition></condition>
+                    <destination>JUMP_BEGIN</destination>
+                    <transite_destination>JUMP_BEGIN</transite_destination>
+                    <transitionactions/>
+                </transition>
+            </transitions>
+        </state>
+    </statemachine>
+    <graphics>
+        <class classname="GStateSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GStateSaver">
+                <qstring name="stateName">IDLE_RUN</qstring>
+                <QPoint name="position">
+                    <int>-1708</int>
+                    <int>105</int>
+                </QPoint>
+            </data>
+        </class>
+        <class classname="GStateSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GStateSaver">
+                <qstring name="stateName">JUMP_BEGIN</qstring>
+                <QPoint name="position">
+                    <int>-2085</int>
+                    <int>-119</int>
+                </QPoint>
+            </data>
+        </class>
+        <class classname="GStateSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GStateSaver">
+                <qstring name="stateName">JUMP_END</qstring>
+                <QPoint name="position">
+                    <int>-1325</int>
+                    <int>-97</int>
+                </QPoint>
+            </data>
+        </class>
+        <class classname="GStateSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GStateSaver">
+                <qstring name="stateName">JUMP_LOOP</qstring>
+                <QPoint name="position">
+                    <int>-1721</int>
+                    <int>-334</int>
+                </QPoint>
+            </data>
+        </class>
+        <class classname="GTransitionSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GTransitionSaver">
+                <qstring name="stateName">IDLE_RUN</qstring>
+                <int name="transition">0</int>
+                <qvaluelist name="points"/>
+            </data>
+        </class>
+        <class classname="GTransitionSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GTransitionSaver">
+                <qstring name="stateName">IDLE_RUN</qstring>
+                <int name="transition">1</int>
+                <qvaluelist name="points"/>
+            </data>
+        </class>
+        <class classname="GTransitionSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GTransitionSaver">
+                <qstring name="stateName">JUMP_BEGIN</qstring>
+                <int name="transition">0</int>
+                <qvaluelist name="points">
+                    <QPoint>
+                        <int>-1827</int>
+                        <int>-203</int>
+                    </QPoint>
+                </qvaluelist>
+            </data>
+        </class>
+        <class classname="GTransitionSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GTransitionSaver">
+                <qstring name="stateName">JUMP_BEGIN</qstring>
+                <int name="transition">1</int>
+                <qvaluelist name="points"/>
+            </data>
+        </class>
+        <class classname="GTransitionSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GTransitionSaver">
+                <qstring name="stateName">JUMP_END</qstring>
+                <int name="transition">0</int>
+                <qvaluelist name="points"/>
+            </data>
+        </class>
+        <class classname="GTransitionSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GTransitionSaver">
+                <qstring name="stateName">JUMP_LOOP</qstring>
+                <int name="transition">0</int>
+                <qvaluelist name="points"/>
+            </data>
+        </class>
+        <class classname="GTransitionSaver">
+            <meta classname="GSaver">
+                <data classname="GSaver"/>
+            </meta>
+            <data classname="GTransitionSaver">
+                <qstring name="stateName">JUMP_LOOP</qstring>
+                <int name="transition">1</int>
+                <qvaluelist name="points">
+                    <QPoint>
+                        <int>-1866</int>
+                        <int>-254</int>
+                    </QPoint>
+                </qvaluelist>
+            </data>
+        </class>
+    </graphics>
+</FSM>

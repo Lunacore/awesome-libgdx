@@ -43,7 +43,7 @@ public abstract class GameObject {
 		this.render = render;
 	}
 	
-	public <T> T getNonNull(String key, Class<T> cls, T ifnull) {
+	public <T> T get(String key, Class<T> cls, T ifnull) {
 		if(properties.get(key) == null) return ifnull;
 		return properties.get(key, cls);
 	}
@@ -245,11 +245,11 @@ public abstract class GameObject {
 		return info.getState();
 	}
 	
-	public float getScale() {
+	public float getMapScale() {
 		return info.getScale();
 	}
 	
-	public void setScale(float scale) {
+	public void setMapScale(float scale) {
 		info.scale = scale;
 	}
 

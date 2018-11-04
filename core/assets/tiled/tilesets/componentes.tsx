@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.2.0" name="componentes" tilewidth="629" tileheight="606" tilecount="9" columns="0">
+<tileset name="componentes" tilewidth="629" tileheight="606" tilecount="10" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="431" height="217" source="../resources/botao 1.png"/>
@@ -56,5 +56,11 @@
  </tile>
  <tile id="8">
   <image width="374" height="356" source="../resources/refletor_.png"/>
+ </tile>
+ <tile id="9">
+  <image width="183" height="183" source="../resources/laranjo.png"/>
+  <objectgroup draworder="index">
+   <object id="1" x="-2" y="-2" width="183" height="182"/>
+  </objectgroup>
  </tile>
 </tileset>

@@ -67,6 +67,9 @@ project(":core") {
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.10.0"
         compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.10.0"
         compile group: 'org.json', name: 'json', version: '20180813'
+        compile group: 'com.github.trixt0r', name: 'Spriter', version: '1.1'
+        compile group: 'com.github.oxo42', name: 'stateless4j', version: '2.5.0'
+        
     }
 }
 

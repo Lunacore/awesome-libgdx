@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="800" tileheight="600" infinite="0" nextlayerid="2" nextobjectid="37">
+<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="1280" tileheight="720" infinite="0" nextobjectid="61">
  <tileset firstgid="1" source="../tilesets/componentes.tsx"/>
- <objectgroup id="1" name="bijeto">
-  <object id="32" template="../templates/button_1.tx" x="364" y="230"/>
-  <object id="33" template="../templates/button_1.tx" x="41.5066" y="360.151" width="117" height="215.116" rotation="-288.317"/>
-  <object id="34" template="../templates/canto.tx" x="367" y="468"/>
-  <object id="35" type="object" gid="1" x="37" y="168" width="197" height="145">
+ <objectgroup name="bijeto">
+  <object id="40" x="67.3333" y="510" width="46.6667" height="85.3333">
    <properties>
-    <property name="bodyType" value="DynamicBody"/>
-    <property name="fixedRotation" type="bool" value="false"/>
+    <property name="class" value="com.mygdx.game.test.Personagem"/>
+    <property name="path" value="spriter/proj.scml"/>
    </properties>
   </object>
-  <object id="36" type="object" x="204" y="238" width="106" height="54">
-   <properties>
-    <property name="bodyType" value="DynamicBody"/>
-   </properties>
-  </object>
+  <object id="52" type="object" gid="10" x="-11" y="720.333" width="1295" height="87"/>
+  <object id="53" type="object" gid="10" x="223.167" y="659.167" width="107" height="103"/>
+  <object id="54" type="object" gid="10" x="349.167" y="603.167" width="107" height="103"/>
+  <object id="55" type="object" gid="10" x="493.167" y="537.833" width="107" height="103"/>
+  <object id="56" type="object" gid="10" x="626.5" y="471.167" width="107" height="103"/>
+  <object id="57" type="object" gid="10" x="766.5" y="416.5" width="107" height="103"/>
+  <object id="58" type="object" gid="10" x="1.16667" y="356.5" width="331" height="39"/>
+  <object id="59" type="object" gid="10" x="-246.833" y="244.5" width="331" height="39"/>
+  <object id="60" type="object" gid="10" x="222.5" y="172.5" width="331" height="39"/>
  </objectgroup>
 </map>

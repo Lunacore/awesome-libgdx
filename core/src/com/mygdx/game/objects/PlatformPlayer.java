@@ -21,16 +21,15 @@ public abstract class PlatformPlayer extends GameObject{
 	
 	protected boolean left;
 	protected boolean right;
-	protected boolean onFloor;
+	private boolean onFloor;
 	protected float jumpStrength;
-	protected int jumps;
+	private int jumps;
 	protected int totalJumps;
 	protected float speed = 10;
 	
 	public PlatformPlayer(ObjectInfo info, MapProperties properties) {
 		super(info, properties);
 		BodyDef def = new BodyDef();
-		onFloor = true;
 		Vector2 position = new Vector2(get("x", Float.class) + get("width", Float.class)/2f, get("y", Float.class) + get("height", Float.class) / 2f);
 		def.position.set(position.cpy().scl(1/State.PHYS_SCALE));
 		def.type = BodyType.DynamicBody;
@@ -56,7 +55,6 @@ public abstract class PlatformPlayer extends GameObject{
 	public PlatformPlayer(ObjectInfo info, Vector2 position, Vector2 size) {
 		super(info, new MapProperties());
 		BodyDef def = new BodyDef();
-		onFloor = true;
 		def.position.set(position.cpy().scl(1/State.PHYS_SCALE));
 		def.type = BodyType.DynamicBody;
 		def.fixedRotation = true;
@@ -66,6 +64,14 @@ public abstract class PlatformPlayer extends GameObject{
 		body.setUserData(this);
 		setJumpStrength(20);
 		setTotalJumps(2);
+		
+		getState().manager.registerKey("Left", Device.KEYBOARD, Keys.A);
+		getState().manager.registerKey("Right", Device.KEYBOARD, Keys.D);
+		getState().manager.registerKey("Jump", Device.KEYBOARD, Keys.W);
+		
+		getState().manager.registerKey("Left", Device.CONTROLLER, XBoxController.POV_LEFT);
+		getState().manager.registerKey("Right", Device.CONTROLLER, XBoxController.POV_RIGHT);
+		getState().manager.registerKey("Jump", Device.CONTROLLER, XBoxController.POV_UP);
 	}
 
 
@@ -95,13 +101,12 @@ public abstract class PlatformPlayer extends GameObject{
 			direction = 1;
 		}
 		if(mapName.equals("Jump")) {
-			if(jumps > 0) {
+			if(getRemainingJumps() > 0) {
 				body.setLinearVelocity(body.getLinearVelocity().x, 0);
 				body.applyLinearImpulse(new Vector2(0, body.getMass() * jumpStrength), body.getWorldCenter(), true);
-				jumps --;
+				setJumps(getRemainingJumps() - 1);
 			}
 		}
-		super.inputIn(device, mapName);
 	}
 	
 	public void inputOut(Device device, String mapName) {
@@ -111,48 +116,11 @@ public abstract class PlatformPlayer extends GameObject{
 		if(mapName.equals("Right")) {
 			right = false;
 		}
-		super.inputOut(device, mapName);
 	}
-	
-	public boolean buttonDown(Controller controller, int buttonCode) {
-		if(buttonCode == XBoxController.BUTTON_A) {
-			if(jumps > 0) {
-				body.setLinearVelocity(body.getLinearVelocity().x, 0);
-				body.applyLinearImpulse(new Vector2(0, body.getMass() * jumpStrength), body.getWorldCenter(), true);
-				jumps --;
-			}
-		}
-		
-		return super.buttonDown(controller, buttonCode);
-	}
-	
-	public boolean axisMoved(Controller controller, int axisCode, float value) {
-		
-		if(axisCode == XBoxController.AXIS_LEFT_X) {
-			if(Math.abs(value) > 0.5f) {
-				if(value > 0) {
-					right = true;
-					direction = 1;
-				}
-				else {
-					left = true;
-					direction = -1;
-				}
-				
-			}
-			else {
-				right = false;
-				left = false;
-			}
-		}
-		
-		return super.axisMoved(controller, axisCode, value);
-	}
-	
 	public void setOnFloor(boolean b) {
 		onFloor = b;
 		if(b) {
-			jumps = totalJumps;
+			setJumps(totalJumps);
 		}
 	}
 
@@ -170,7 +138,7 @@ public abstract class PlatformPlayer extends GameObject{
 
 	public void setTotalJumps(int totalJumps) {
 		this.totalJumps = totalJumps;
-		jumps = totalJumps;
+		setJumps(totalJumps);
 	}
 	
 	public void setSpeed(float speed) {
@@ -209,6 +177,18 @@ public abstract class PlatformPlayer extends GameObject{
 
 	public void setBodyPosition(Vector2 position) {
 		body.setTransform(position.x, position.y, 0);
+	}
+
+	public int getRemainingJumps() {
+		return jumps;
+	}
+
+	public void setJumps(int jumps) {
+		this.jumps = jumps;
+	}
+
+	public boolean isOnFloor() {
+		return onFloor;
 	}
 	
 }
