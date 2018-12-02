@@ -12,8 +12,10 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.brashmonkey.spriter.Animation;
 import com.brashmonkey.spriter.Player;
+import com.brashmonkey.spriter.PlayerTweener;
 import com.mygdx.game.helper.Helper;
 import com.mygdx.game.objects.KeyMapper.Device;
+import com.mygdx.game.states.State;
 import com.mygdx.game.objects.ObjectInfo;
 import com.mygdx.game.objects.PlatformPlayer;
 import com.mygdx.game.objects.SpriterAnimation;
@@ -22,29 +24,28 @@ import com.mygdx.game.structs.Transform;
 public class Personagem extends PlatformPlayer{
 
 	SpriterAnimation animation;
-		
 	float endVelocityX = 0;
-
 	protected boolean requestJump;
 	
-	PersonagemAnimationController controller;
+	PlayerTweener idle_run;
 	
-	BitmapFont font;
+	//PersonagemAnimationController controller;
 	
 	public Personagem(ObjectInfo info, MapProperties properties) {
 		super(info, properties);
-		
-		animation = new SpriterAnimation(info, properties);
+				
+		animation = new SpriterAnimation(info, "spriter/luna/luna.scml", new Vector2(get("x", Float.class) / State.PHYS_SCALE, get("y", Float.class) / State.PHYS_SCALE));
 		getState().putInScene(animation);
-		
 		setJumpStrength(10);
 		setSpeed(5);
-		
 		body.setUserData(this);
-
-		controller = new PersonagemAnimationController(this);
-		
-		font = Helper.newFont("Allan-Bold.ttf", 28);
+		idle_run = animation.createInterpolatedAnimation("Idle", "Run", 0);
+		animation.setPlayer(idle_run);
+		//controller = new PersonagemAnimationController(this);
+	}
+	
+	public SpriterAnimation getSpriterAnimation() {
+		return animation;
 	}
 
 	public void create() {
@@ -57,14 +58,6 @@ public class Personagem extends PlatformPlayer{
 
 	public void render(SpriteBatch sb, ShapeRenderer sr, OrthographicCamera camera) {
 
-		sb.end();
-		
-		sr.begin(ShapeType.Line);
-		sr.setColor(Color.RED);
-			sr.line(body.getWorldCenter(), body.getWorldCenter().cpy().add(0, -distanceToFloor));
-		sr.end();
-		
-		sb.begin();
 	}
 	
 	float distanceToFloor = 0;
@@ -79,10 +72,12 @@ public class Personagem extends PlatformPlayer{
 		animation.getTransform().setPosition(
 				body.getWorldCenter().x,
 				body.getWorldCenter().y - 0.5f);
-		animation.setScale(new Vector2(1/4f, 1/4f));
+		animation.setScale(new Vector2(1/7f, 1/7f));
 		animation.flip(direction == -1, false);
 		
 		endVelocityX += (Math.abs(body.getLinearVelocity().x) - endVelocityX) / 15f;
+		
+		idle_run.setWeight(endVelocityX / speed);
 		
 		getState().getWorld().rayCast(new RayCastCallback() {
 			
@@ -101,7 +96,8 @@ public class Personagem extends PlatformPlayer{
 			
 		}, body.getWorldCenter(), body.getWorldCenter().cpy().add(0, -10));
 		
-		controller.update(delta);
+		//controller.update(delta);
+		//animation.setPlayer(controller.getCurrentPlayer());
 		return false;
 	}
 	

@@ -7,39 +7,23 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.helper.Helper;
 import com.mygdx.game.states.StateManager;
+import com.mygdx.game.states.StateOne;
 
 import io.anuke.gif.GifRecorder;
 
 public class MyGdxGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	
-	StateManager manager;
-	GifRecorder gifRecorder;
-	
-	@Override
+		
 	public void create () {
-		batch = new SpriteBatch();
-		manager = new StateManager();
-		manager.create();
-		gifRecorder = new GifRecorder(batch);
-
+		AwesomeLibGDX.init();
+		AwesomeLibGDX.addState(new StateOne());
+		AwesomeLibGDX.create();
 	}
 
-	@Override
 	public void render () {
-		Gdx.gl.glClearColor(17/255f, 26/255f, 36/255f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		manager.update(Gdx.graphics.getDeltaTime());
-		manager.render(batch);
-		
-		gifRecorder.update();
-		Helper.Game.globalTimer += Gdx.graphics.getDeltaTime();
+		AwesomeLibGDX.render();
 	}
 	
-	@Override
 	public void dispose () {
-		batch.dispose();
-		manager.dispose();
+		AwesomeLibGDX.dispose();
 	}
 }

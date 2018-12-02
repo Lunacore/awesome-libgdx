@@ -34,13 +34,15 @@ public class StateManager{
 	public StateManager() {
 		
 		keyMapper = new KeyMapper(this);
-		
-		states = new ArrayList<State>();
-		states.add(new StateOne(this));
-		
+		states = new ArrayList<State>();		
 		nextState = currentState;
-		
 		stateBuffer = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+	}
+	
+	public int addState(State state) {
+		state.setManager(this);
+		states.add(state);
+		return states.size() - 1;
 	}
 	
 	public void registerKey(String mapName, Device device, int keycode) {

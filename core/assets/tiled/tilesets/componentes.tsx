@@ -7,11 +7,10 @@
    <object id="1" x="78" y="23">
     <polygon points="0,0 -21.1818,80.6364 -50.6364,89.9091 -64,105.864 -67.1818,126.364 -60.9091,138.364 -35.5,155.25 -8.63636,164.591 45.5,178.125 100,182.75 163.5,183.875 222,178.5 274.25,167.938 314.5,152.875 338,132.75 340,110.5 330.739,94 311.875,83.25 288,81.5 265,-1 208.25,7.75 69,8"/>
    </object>
-   <object id="13" x="158" y="-154" width="95" height="185"/>
   </objectgroup>
   <animation>
-   <frame tileid="0" duration="50"/>
-   <frame tileid="1" duration="500"/>
+   <frame tileid="1" duration="100"/>
+   <frame tileid="0" duration="100"/>
   </animation>
  </tile>
  <tile id="1">
@@ -49,10 +48,6 @@
  </tile>
  <tile id="7">
   <image width="374" height="356" source="../resources/refletor.png"/>
-  <animation>
-   <frame tileid="7" duration="10"/>
-   <frame tileid="8" duration="10"/>
-  </animation>
  </tile>
  <tile id="8">
   <image width="374" height="356" source="../resources/refletor_.png"/>

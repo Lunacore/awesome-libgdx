@@ -12,14 +12,14 @@ import com.github.oxo42.stateless4j.delegates.Action1;
 import com.github.oxo42.stateless4j.transitions.Transition;
 import com.mygdx.game.helper.Helper;
 
-public abstract class BaseAnimationController {
+public abstract class DefaultAnimationController {
 	
 	protected StateMachine<State, Trigger> state;
 	public float timeInState = 0;
 	GameObject personagem;
 	protected PlayerTweener tweener;
 	
-	public interface State<T extends BaseAnimationController>{
+	public interface State<T extends DefaultAnimationController>{
 		abstract Player anim(T controller);
 		abstract String name();
 	}
@@ -31,7 +31,7 @@ public abstract class BaseAnimationController {
 	
 	protected StateMachineConfig<State, Trigger> config;
 	
-	public BaseAnimationController(GameObject personagem) {
+	public DefaultAnimationController(GameObject personagem) {
 		this.personagem = personagem;
 		//Configura as stateMachines
 		config = new StateMachineConfig<State, Trigger>();
@@ -49,14 +49,14 @@ public abstract class BaseAnimationController {
 		
 		Action1<Transition<State, Trigger>> resetAnimation = new Action1<Transition<State, Trigger>>() {
 			public void doIt(Transition<State, Trigger> transition) {
-				transition.getDestination().anim(BaseAnimationController.this).setTime(0);
-				transition.getSource().anim(BaseAnimationController.this).setTime(0);
+				transition.getDestination().anim(DefaultAnimationController.this).setTime(0);
+				transition.getSource().anim(DefaultAnimationController.this).setTime(0);
 				tweener.setTime(0);
 				
 				
 				tweener.setPlayers(
-						transition.getSource().anim(BaseAnimationController.this),
-						transition.getDestination().anim(BaseAnimationController.this));
+						transition.getSource().anim(DefaultAnimationController.this),
+						transition.getDestination().anim(DefaultAnimationController.this));
 				tweener.setWeight(0);
 				transitionAlpha = 1;
 			}
@@ -78,7 +78,11 @@ public abstract class BaseAnimationController {
 			}
 		}
 		
-		state = new StateMachine<BaseAnimationController.State, BaseAnimationController.Trigger>(initialState, config);
+		state = new StateMachine<DefaultAnimationController.State, DefaultAnimationController.Trigger>(initialState, config);
+	}
+	
+	public Player getCurrentPlayer() {
+		return tweener;
 	}
 	
 	public void finishConstructor() {

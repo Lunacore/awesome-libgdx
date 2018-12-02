@@ -4,9 +4,9 @@ import com.brashmonkey.spriter.Animation;
 import com.brashmonkey.spriter.Player;
 import com.brashmonkey.spriter.PlayerTweener;
 import com.github.oxo42.stateless4j.delegates.Action;
-import com.mygdx.game.objects.BaseAnimationController;
+import com.mygdx.game.objects.DefaultAnimationController;
 
-public class PersonagemAnimationController extends BaseAnimationController{
+public class PersonagemAnimationController extends DefaultAnimationController{
 	
 	
 	public enum MyState implements State<PersonagemAnimationController>{
@@ -72,20 +72,21 @@ public class PersonagemAnimationController extends BaseAnimationController{
 	Player jumpBegin;
 	Player jumpEnd;
 	Player jumpLoop;
-
 	Personagem personagem;
 	
 	public PersonagemAnimationController(final Personagem personagem) {
 		super(personagem);
 		this.personagem = personagem;
 		timeToTransition = 0;
+		
+		//Carrega a maquina de estados
 		readXML("spriter/controller.fsm",
-		new BaseAnimationController.EnumReader<State>(){
+		new DefaultAnimationController.EnumReader<State>(){
 			public State<?> read(String text) {
 				return MyState.valueOf(text);
 			}
 		},
-		new EnumReader<BaseAnimationController.Trigger>() {
+		new EnumReader<DefaultAnimationController.Trigger>() {
 			public Trigger<?> read(String text) {
 				return MyTrigger.valueOf(text);
 			}
@@ -115,11 +116,6 @@ public class PersonagemAnimationController extends BaseAnimationController{
 		jumpEnd.setAnimation("JumpEnd");
 		
 		finishConstructor();
-	}
-	
-	public void update(float delta) {
-		super.update(delta);
-		personagem.setPlayer(tweener);		
 	}
 
 }

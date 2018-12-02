@@ -159,7 +159,12 @@
             <data classname="GTransitionSaver">
                 <qstring name="stateName">IDLE_RUN</qstring>
                 <int name="transition">1</int>
-                <qvaluelist name="points"/>
+                <qvaluelist name="points">
+                    <QPoint>
+                        <int>-1711</int>
+                        <int>-162</int>
+                    </QPoint>
+                </qvaluelist>
             </data>
         </class>
         <class classname="GTransitionSaver">
@@ -184,7 +189,12 @@
             <data classname="GTransitionSaver">
                 <qstring name="stateName">JUMP_BEGIN</qstring>
                 <int name="transition">1</int>
-                <qvaluelist name="points"/>
+                <qvaluelist name="points">
+                    <QPoint>
+                        <int>-1630</int>
+                        <int>-81</int>
+                    </QPoint>
+                </qvaluelist>
             </data>
         </class>
         <class classname="GTransitionSaver">

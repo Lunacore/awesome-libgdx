@@ -32,6 +32,7 @@ import box2dLight.RayHandler;
 public abstract class State{
 	
 	public static final float PHYS_SCALE = 45f;
+	public static final int NUM_RAYS = 200;
 	
 	public StateManager manager;
 	ShapeRenderer sr;
@@ -53,14 +54,14 @@ public abstract class State{
 	
 	public PointLight addPointLight(Color color, Vector2 position) {
 		if(rayHandler != null)
-		return new PointLight(rayHandler, 20, color, 5, position.x, position.y);
+		return new PointLight(rayHandler, NUM_RAYS, color, 5, position.x, position.y);
 		
 		return null;
 	}
 	
 	public PointLight addPointLight(Color color, Vector2 position, float distance) {
 		if(rayHandler != null)
-		return new PointLight(rayHandler, 20, color, distance, position.x, position.y);
+		return new PointLight(rayHandler, NUM_RAYS, color, distance, position.x, position.y);
 		
 		return null;
 	}
@@ -70,9 +71,7 @@ public abstract class State{
 		gos.remove(obj);
 		
 	}
-	
-	
-	
+
 	@SuppressWarnings("rawtypes")
 	public ArrayList<GameObject> getByClass(Class clazz){
 		ArrayList<GameObject> result = new ArrayList<GameObject>();
@@ -86,7 +85,7 @@ public abstract class State{
 	
 	public ConeLight addConeLight(Color color, Vector2 position, float distance, float angle, float coneAngle) {
 		if(rayHandler != null)
-		return new ConeLight(rayHandler, 20, color, distance, position.x, position.y, angle, coneAngle);
+		return new ConeLight(rayHandler, NUM_RAYS, color, distance, position.x, position.y, angle, coneAngle);
 		
 		return null;
 	}
@@ -140,14 +139,17 @@ public abstract class State{
 		gos.add(go);
 	}
 	
-	public State(StateManager manager) {
-		this.manager = manager;
+	public State() {
 		sr = new ShapeRenderer();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
 		
 		forRemoval = new ArrayList<Body>();
 		gos = new ArrayList<GameObject>();
+	}
+	
+	public void setManager(StateManager manager) {
+		this.manager = manager;
 	}
 	
 	public void enablePhysics(ContactListener listener) {

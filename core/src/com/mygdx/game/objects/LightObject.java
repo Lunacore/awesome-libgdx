@@ -23,7 +23,7 @@ public class LightObject extends GameObject{
 			Color color = get("color", Color.class);
 			color.a = get("intensity", Float.class);
 			
-			info.getState().addConeLight(color, new Vector2(get("x", Float.class) /  State.PHYS_SCALE, get("y", Float.class) / State.PHYS_SCALE), get("distance", Float.class), get("angle", Float.class), get("coneAngle", Float.class));
+			info.getState().addConeLight(color, new Vector2(get("x", Float.class) /  State.PHYS_SCALE, get("y", Float.class) / State.PHYS_SCALE), get("distance", Float.class), get("rotation", Float.class, 0f), get("coneAngle", Float.class));
 		}
 	}
 

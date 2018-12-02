@@ -41,6 +41,37 @@ public class SpriterAnimation extends GameObject{
 
 	}
 	
+	public PlayerTweener createInterpolatedAnimation(String animationName1, String animationName2, float alpha) {
+		
+		PlayerTweener tweener = new PlayerTweener(player.getEntity());
+		
+		Player p1 = new Player(player.getEntity());
+		p1.setAnimation(animationName1);
+		Player p2 = new Player(player.getEntity());
+		p2.setAnimation(animationName2);
+		
+		tweener.setPlayers(p1, p2);
+		tweener.setWeight(alpha);
+		
+		return tweener;
+	}
+	
+	public SpriterAnimation(ObjectInfo info, String path, Vector2 position) {
+		super(info, new MapProperties());
+		
+		FileHandle handle = Gdx.files.internal(path);
+		Data data = new SCMLReader(handle.read()).getData();
+
+		loader = new LibGdxLoader(data);
+		loader.load(handle.file());
+		
+		player = new Player(data.getEntity(0));
+		
+		transform.setPosition(new Vector2(
+				position.x,
+				position.y));
+	}
+	
 	public Animation getAnimation(String animationName) {
 		return player.getEntity().getAnimation(animationName);
 	}
