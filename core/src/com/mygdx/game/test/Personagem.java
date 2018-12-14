@@ -26,7 +26,6 @@ public class Personagem extends PlatformPlayer{
 	SpriterAnimation animation;
 	float endVelocityX = 0;
 	protected boolean requestJump;
-	
 	PlayerTweener idle_run;
 	
 	//PersonagemAnimationController controller;
@@ -76,7 +75,6 @@ public class Personagem extends PlatformPlayer{
 		animation.flip(direction == -1, false);
 		
 		endVelocityX += (Math.abs(body.getLinearVelocity().x) - endVelocityX) / 15f;
-		
 		idle_run.setWeight(endVelocityX / speed);
 		
 		getState().getWorld().rayCast(new RayCastCallback() {

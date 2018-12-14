@@ -124,7 +124,9 @@ public class TmxRenderer{
 	
 	public void instanceSingle(MapObject mo, MapLayer layer, int layerCount) {
 		
+		
 		MapProperties props = mo.getProperties();
+		props.put("name", mo.getName());
 		String objClass = props.get("class", String.class);
 		
 		Body body = parser.getBodiesID().get(props.get("id", Integer.class), null);
