@@ -13,13 +13,13 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.brashmonkey.spriter.Animation;
 import com.brashmonkey.spriter.Player;
 import com.brashmonkey.spriter.PlayerTweener;
+import com.mygdx.game.animation.SpriterAnimation;
+import com.mygdx.game.entities.ObjectInfo;
+import com.mygdx.game.entities.PlatformPlayer;
 import com.mygdx.game.helper.Helper;
-import com.mygdx.game.objects.KeyMapper.Device;
+import com.mygdx.game.input.KeyMapper.Device;
+import com.mygdx.game.math.Transform;
 import com.mygdx.game.states.State;
-import com.mygdx.game.objects.ObjectInfo;
-import com.mygdx.game.objects.PlatformPlayer;
-import com.mygdx.game.objects.SpriterAnimation;
-import com.mygdx.game.structs.Transform;
 
 public class Personagem extends PlatformPlayer{
 

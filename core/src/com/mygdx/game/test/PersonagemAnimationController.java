@@ -4,7 +4,7 @@ import com.brashmonkey.spriter.Animation;
 import com.brashmonkey.spriter.Player;
 import com.brashmonkey.spriter.PlayerTweener;
 import com.github.oxo42.stateless4j.delegates.Action;
-import com.mygdx.game.objects.DefaultAnimationController;
+import com.mygdx.game.animation.DefaultAnimationController;
 
 public class PersonagemAnimationController extends DefaultAnimationController{
 	

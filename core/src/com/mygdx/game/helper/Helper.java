@@ -33,8 +33,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
+import com.mygdx.game.math.Transform;
 import com.mygdx.game.states.State;
-import com.mygdx.game.structs.Transform;
 
 public class Helper {
 	

@@ -3,8 +3,8 @@ package com.mygdx.game.states;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.objects.KeyMapper.Device;
-import com.mygdx.game.objects.XBoxController;
+import com.mygdx.game.input.XBoxController;
+import com.mygdx.game.input.KeyMapper.Device;
 
 public class StateOne extends State{
 

@@ -11,8 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.helper.Helper;
-import com.mygdx.game.objects.KeyMapper;
-import com.mygdx.game.objects.KeyMapper.Device;
+import com.mygdx.game.input.KeyMapper;
+import com.mygdx.game.input.KeyMapper.Device;
 import com.mygdx.game.utils.FrameBufferStack;
 import com.mygdx.game.utils.ScreenSize;
 

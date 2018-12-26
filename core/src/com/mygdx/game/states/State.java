@@ -18,12 +18,12 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.entities.GameObject;
+import com.mygdx.game.entities.GameParticle;
+import com.mygdx.game.entities.ObjectInfo;
 import com.mygdx.game.helper.Helper;
-import com.mygdx.game.objects.GameObject;
-import com.mygdx.game.objects.GameParticle;
-import com.mygdx.game.objects.KeyMapper.Device;
-import com.mygdx.game.objects.ObjectInfo;
-import com.mygdx.game.objects.TmxRenderer;
+import com.mygdx.game.input.KeyMapper.Device;
+import com.mygdx.game.tiled.TmxRenderer;
 
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
