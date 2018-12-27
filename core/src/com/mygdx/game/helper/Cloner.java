@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,22 +76,22 @@ public class Cloner {
 			projectConfig = new File(targetFolder.getAbsolutePath() + "/desktop/.classpath");
 			replaceInFile("</classpath>", "\t<classpathentry kind=\"src\" path=\"/awesome-libgdx-core\"/>\r\n" + 
 					"</classpath>", projectConfig);
-			//Apaga todos os arquivos da biblioteca
+			//Apaga todos os arquivos da biblioteca (incluindo o launcher)
 			System.out.println("Deleting old library clones");
-			projectConfig = new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game/helper");
+				//salva o texto pra carregar dps
+			String launcherCode = readFile(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game/MyGdxGame.java", Charset.defaultCharset());
+				//deleta tudo
+			projectConfig = new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game");
 			deleteFolder(projectConfig);
-			projectConfig = new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game/objects");
-			deleteFolder(projectConfig);
-			projectConfig = new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game/states");
-			deleteFolder(projectConfig);
-			projectConfig = new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game/test");
-			deleteFolder(projectConfig);
-			projectConfig = new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game/structs");
-			deleteFolder(projectConfig);
-			projectConfig = new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game/utils");
-			deleteFolder(projectConfig);
-			projectConfig = new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game/AwesomeLibGDX.java");
-			deleteFolder(projectConfig);
+			
+				//cria o arquivo do launcher de novo
+			new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game").mkdir();
+			File f = new File(targetFolder.getAbsolutePath() + "/core/src/com/mygdx/game/MyGdxGame.java");
+			f.createNewFile();
+				//coloca o texto antigo nele
+			FileWriter fw = new FileWriter(f);
+			fw.write(launcherCode);
+			fw.close();
 			
 			//Apaga o arquivo do git
 			System.out.println("Deleting old git configuration");
@@ -143,6 +146,10 @@ public class Cloner {
 		return string.replaceAll(" ", "");
 	}
 	
-
+	public static String readFile(String path, Charset encoding) 
+			  throws IOException{
+			  byte[] encoded = Files.readAllBytes(Paths.get(path));
+			  return new String(encoded, encoding);
+	}
 
 }
