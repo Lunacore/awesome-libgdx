@@ -1,0 +1,22 @@
+[
+  {
+    "interpolation": "swingOut",
+    "x": 0,
+    "y": 0
+  },
+  {
+    "interpolation": "pow4",
+    "x": 0.10925926,
+    "y": 0.86923075
+  },
+  {
+    "interpolation": "elastic",
+    "x": 0.5713564,
+    "y": 0.26485592
+  },
+  {
+    "interpolation": "linear",
+    "x": 1,
+    "y": 1
+  }
+]

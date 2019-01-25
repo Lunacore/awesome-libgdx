@@ -19,6 +19,8 @@ public class KeyMapper implements InputProcessor, ControllerListener{
 	HashMap<String, ArrayList<KeyMap>> keymaps;
 	HashMap<String, ArrayList<AxisMap>> axismaps;
 	
+	HashMap<String, Boolean> inputStates;
+	
 	public KeyMapper(StateManager manager) {
 		this.manager = manager;
 		Gdx.input.setInputProcessor(this);
@@ -26,11 +28,22 @@ public class KeyMapper implements InputProcessor, ControllerListener{
 		
 		keymaps = new HashMap<String,ArrayList<KeyMap>>();
 		axismaps = new HashMap<String, ArrayList<AxisMap>>();
+		
+		inputStates = new HashMap<String, Boolean>();
+	}
+	
+	public boolean inputPressed(String name) {
+		if(inputStates.get(name) != null) {
+			return inputStates.get(name);
+		}
+		
+		return false;
 	}
 	
 	public void registerKeyMap(String name, Device device, int keycode) {
 		if(keymaps.get(name) == null){
 			keymaps.put(name, new ArrayList<KeyMapper.KeyMap>());
+			inputStates.put(name, false);
 		}
 		
 		if(!arrayContainsKey(keymaps.get(name), device, keycode)) {
@@ -42,6 +55,7 @@ public class KeyMapper implements InputProcessor, ControllerListener{
 		//Dispara os keymaps que usam esse codigo
 		for(String key : findKeyMaps(Device.KEYBOARD, keycode)) {
 			inputIn(Device.KEYBOARD, key);
+			inputStates.put(key, true);
 		}
 		
 		manager.keyDown(keycode);
@@ -52,6 +66,7 @@ public class KeyMapper implements InputProcessor, ControllerListener{
 		//Dispara os keymaps que usam esse codigo
 		for(String key : findKeyMaps(Device.KEYBOARD, keycode)) {
 			inputOut(Device.KEYBOARD, key);
+			inputStates.put(key, false);
 		}
 		manager.keyUp(keycode);
 		return false;
@@ -99,6 +114,7 @@ public class KeyMapper implements InputProcessor, ControllerListener{
 		//Dispara os keymaps que usam esse codigo
 		for(String key : findKeyMaps(Device.CONTROLLER, buttonCode)) {
 			inputIn(Device.CONTROLLER, key);
+			inputStates.put(key, true);
 		}
 				
 		manager.buttonDown(controller, buttonCode);
@@ -109,6 +125,7 @@ public class KeyMapper implements InputProcessor, ControllerListener{
 		//Dispara os keymaps que usam esse codigo
 		for(String key : findKeyMaps(Device.CONTROLLER, buttonCode)) {
 			inputOut(Device.CONTROLLER, key);
+			inputStates.put(key, false);
 		}
 		
 		manager.buttonUp(controller, buttonCode);
@@ -164,6 +181,7 @@ public class KeyMapper implements InputProcessor, ControllerListener{
 			//Dispara os keymaps que usam esse codigo
 			for(String key : findKeyMaps(Device.CONTROLLER, lastPovPressed)) {
 				inputOut(Device.CONTROLLER, key);
+				inputStates.put(key, false);
 			}
 			
 			
@@ -172,6 +190,7 @@ public class KeyMapper implements InputProcessor, ControllerListener{
 			//Dispara os keymaps que usam esse codigo
 			for(String key : findKeyMaps(Device.CONTROLLER, povcode)) {
 				inputIn(Device.CONTROLLER, key);
+				inputStates.put(key, true);
 			}
 		}
 		

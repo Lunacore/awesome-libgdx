@@ -1,0 +1,32 @@
+[
+  {
+    "interpolation": "linear",
+    "x": 0,
+    "y": 0
+  },
+  {
+    "interpolation": "linear",
+    "x": 0.3537037,
+    "y": 0.8076923
+  },
+  {
+    "interpolation": "linear",
+    "x": 0.41111112,
+    "y": 0.32884616
+  },
+  {
+    "interpolation": "linear",
+    "x": 0.68333334,
+    "y": 0.7807692
+  },
+  {
+    "interpolation": "linear",
+    "x": 0.84907407,
+    "y": 0.36346152
+  },
+  {
+    "interpolation": "linear",
+    "x": 1,
+    "y": 1
+  }
+]

@@ -6,10 +6,10 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.entities.EmptyContact;
 import com.mygdx.game.entities.PlatformPlayer;
 
-public class StateOneListener extends EmptyContact{
+public class DefaultStateListener extends EmptyContact{
 
 	
-	public StateOneListener(State state) {
+	public DefaultStateListener(State state) {
 		super(state);
 	}
 

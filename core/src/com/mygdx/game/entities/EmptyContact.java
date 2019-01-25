@@ -29,6 +29,19 @@ public abstract class EmptyContact implements ContactListener{
 		return false;
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public boolean compareCollision(Contact contact, Class clazz) {
+		if(clazz.isInstance(contact.getFixtureA().getBody().getUserData())) {
+			return true;
+		}
+		
+		if(clazz.isInstance(contact.getFixtureB().getBody().getUserData())) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public <T> T getInstanceFromContact(Contact contact, Class class1) {
 		if(class1.isInstance(contact.getFixtureA().getBody().getUserData())) {

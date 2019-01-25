@@ -22,7 +22,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.entities.GameObject;
 import com.mygdx.game.entities.ObjectInfo;
-import com.mygdx.game.entities.TiledImageObject;
+import com.mygdx.game.entities.ImageGameObject;
 import com.mygdx.game.helper.Helper;
 import com.mygdx.game.states.State;
 
@@ -166,9 +166,8 @@ public class TmxRenderer{
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				System.err.println("Erro ao tentar instanciar objeto da classe " + objClass);
-				System.out.println("eta");
 				e.getTargetException().printStackTrace();
-				System.out.println("porra");
+				e.printStackTrace();
 				Gdx.app.exit();
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
@@ -186,13 +185,10 @@ public class TmxRenderer{
 		
 		if(body != null)
 			mo.getProperties().put("body", body);
-		
-		System.out.println(mo.getProperties().get("body"));
-		
-		TiledImageObject io = new TiledImageObject(new ObjectInfo(info.getState(), layerCount, info.getScale()), (TiledMapTileMapObject) mo);
+				
+		ImageGameObject io = new ImageGameObject(new ObjectInfo(info.getState(), layerCount, info.getScale()), (TiledMapTileMapObject) mo);
 		info.getState().putInScene(io);
 		instancedObjects.put(mo.getProperties().get("id", Integer.class), io);
-
 		
 	}
 	

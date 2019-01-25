@@ -24,6 +24,7 @@ public class GameParticle extends GameObject{
 	Vector2 gravity;
 	float life;
 	float drag;
+	float alpha;
 	
 	//Interno	
 	float globalTimer;
@@ -38,6 +39,7 @@ public class GameParticle extends GameObject{
 		life = 1;
 		velocity = new Vector2(0, 0);
 		gravity = new Vector2(0, 0);
+		alpha = 1;
 	}
 
 	public GameParticle(ObjectInfo info, Vector2 position, Texture texture) {
@@ -90,28 +92,18 @@ public class GameParticle extends GameObject{
 
 	public void render(SpriteBatch sb, ShapeRenderer sr, OrthographicCamera camera) {
 		Helper.enableBlend();
-		sb.setColor(1, 1, 1, Math.min(1, life - globalTimer));
+		sb.setColor(1, 1, 1, Math.min(1, life - globalTimer) * alpha);
 		
 		if(image != null) {
 			renderTexture(sb, image);
 		}
 
 		if(text != null) {
-			font.setColor(fontColor.r, fontColor.g, fontColor.b, Math.min(1, life - globalTimer));
+			font.setColor(fontColor.r, fontColor.g, fontColor.b, Math.min(1, life - globalTimer) * alpha);
 			Helper.drawFont(sb, font, camera, text, transform.getPosition());
 			font.setColor(1, 1, 1, 1);
+		}
 
-		}
-			/*
-			sb.setProjectionMatrix(Helper.getDefaultProjection());
-			layout.setText(font, text);
-			
-			Vector3 rpos = camera.project(new Vector3(transform.getPosition(), 0));
-			font.draw(sb, text, rpos.x - layout.width/2f, rpos.y);
-			sb.setProjectionMatrix(camera.combined);
-		}
-		*/
-		
 		sb.setColor(1, 1, 1, 1);
 		Helper.disableBlend();
 	}
@@ -122,9 +114,7 @@ public class GameParticle extends GameObject{
 		if(life - globalTimer <= 0) {
 			return true;
 		}
-		
-	
-		
+				
 		transform.getPosition().add(velocity);
 		velocity.add(gravity);
 		
@@ -139,7 +129,7 @@ public class GameParticle extends GameObject{
 	}
 
 	public void setVelocity(Vector2 velocity) {
-		this.velocity = velocity;
+		this.velocity.set(velocity);
 	}
 
 	public Vector2 getGravity() {
@@ -147,7 +137,11 @@ public class GameParticle extends GameObject{
 	}
 
 	public void setGravity(Vector2 gravity) {
-		this.gravity = gravity;
+		this.gravity.set(gravity);
+	}
+	
+	public void setGravity(float x, float y) {
+		gravity.set(x, y);
 	}
 
 	public float getLife() {
@@ -171,7 +165,15 @@ public class GameParticle extends GameObject{
 	}
 
 	public void setFontColor(Color fontColor) {
-		this.fontColor = fontColor;
+		this.fontColor.set(fontColor);
+	}
+	
+	public void setAlpha(float alpha) {
+		this.alpha = alpha;
+	}
+	
+	public float getAlpha() {
+		return alpha;
 	}
 
 	@Override

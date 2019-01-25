@@ -45,12 +45,27 @@ public class Transform {
 		this.scale = scale;
 	}
 	
+	public void setScale(float x, float y) {
+		scale.x = x;
+		scale.y = y;
+	}
+	
 	public String toString() {
 		return "Position: " + position.toString() + ", Angle: " + angle + ", Scale: " + scale.toString();
 	}
 
 	public void setPosition(float x, float y) {
 		position.set(x, y);
+	}
+	
+	public void set(Transform transform) {
+		position.set(transform.position);
+		angle = transform.angle;
+		scale.set(transform.scale);
+	}
+
+	public Transform cpy() {
+		return new Transform(position.cpy(), angle, scale.cpy());
 	}
 
 }

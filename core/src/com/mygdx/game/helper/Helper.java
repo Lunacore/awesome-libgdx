@@ -1,6 +1,10 @@
 package com.mygdx.game.helper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -13,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.CircleMapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
@@ -20,8 +25,8 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -40,8 +45,53 @@ public class Helper {
 	
 	static GlyphLayout layout;
 	
+	static HashMap<String, Interpolation> allPossibles = new HashMap<String, Interpolation>();
+
+	
 	static {
 		layout = new GlyphLayout();
+		
+		allPossibles.put("linear", Interpolation.linear);
+		allPossibles.put("bounce", Interpolation.bounce);
+		allPossibles.put("bounceIn", Interpolation.bounceIn);
+		allPossibles.put("bounceOut", Interpolation.bounceOut);
+		allPossibles.put("circle", Interpolation.circle);
+		allPossibles.put("circleIn", Interpolation.circleIn);
+		allPossibles.put("circleOut", Interpolation.circleOut);
+		allPossibles.put("elastic", Interpolation.elastic);
+		allPossibles.put("elasticIn", Interpolation.elasticIn);
+		allPossibles.put("elasticOut", Interpolation.elasticOut);
+		allPossibles.put("exp10", Interpolation.exp10);
+		allPossibles.put("exp10In", Interpolation.exp10In);
+		allPossibles.put("exp10Out", Interpolation.exp10Out);
+		allPossibles.put("exp5", Interpolation.exp5);
+		allPossibles.put("exp5In", Interpolation.exp5In);
+		allPossibles.put("exp5Out", Interpolation.exp5Out);
+		allPossibles.put("fade", Interpolation.fade);
+		allPossibles.put("pow2", Interpolation.pow2);
+		allPossibles.put("pow2In", Interpolation.pow2In);
+		allPossibles.put("pow2InInverse", Interpolation.pow2InInverse);
+		allPossibles.put("pow2Out", Interpolation.pow2Out);
+		allPossibles.put("pow2OutInverse", Interpolation.pow2OutInverse);
+		allPossibles.put("pow3", Interpolation.pow3);
+		allPossibles.put("pow3In", Interpolation.pow3In);
+		allPossibles.put("pow3InInverse", Interpolation.pow3InInverse);
+		allPossibles.put("pow3Out", Interpolation.pow3Out);
+		allPossibles.put("pow3OutInverse", Interpolation.pow3OutInverse);
+		allPossibles.put("pow4", Interpolation.pow4);
+		allPossibles.put("pow4In", Interpolation.pow4In);
+		allPossibles.put("pow4Out", Interpolation.pow4Out);
+		allPossibles.put("pow5", Interpolation.pow5);
+		allPossibles.put("pow5In", Interpolation.pow5In);
+		allPossibles.put("pow5Out", Interpolation.pow5Out);
+		allPossibles.put("sine", Interpolation.sine);
+		allPossibles.put("sineIn", Interpolation.sineIn);
+		allPossibles.put("sineOut", Interpolation.sineOut);
+		allPossibles.put("smooth", Interpolation.smooth);
+		allPossibles.put("smoother", Interpolation.smoother);
+		allPossibles.put("swing", Interpolation.swing);
+		allPossibles.put("swingIn", Interpolation.swingIn);
+		allPossibles.put("swingOut", Interpolation.swingOut);
 	}
 	
 	
@@ -56,6 +106,44 @@ public class Helper {
 		
 	}
 	
+	public static Interpolation makeCustomInterpolation(String jsonPath) {
+		
+		final JSONArray array = new JSONArray(Gdx.files.internal(jsonPath).readString());
+		final JSONObject o = (JSONObject) array.get(array.length() - 1);
+		final float length = o.getFloat("x");
+		
+		return new Interpolation() {
+			public float apply(float a) {
+				a = Helper.clamp(a, 0.001f, length);
+				
+				System.out.println(a);
+				
+				JSONObject ob;
+				
+				int cont = array.length() - 1;
+				do {
+					ob = (JSONObject) array.get(cont);
+					cont --;					
+				}while(ob.getFloat("x") >= a);
+				
+				cont += 2;
+								
+				JSONObject bef = (JSONObject) array.get(cont);
+				
+				float fx = bef.getFloat("x");
+				float ix = ob.getFloat("x");
+								
+				float factor = (a - ix) / (fx - ix);
+				
+				Vector2 first = new Vector2(ob.getFloat("x"), ob.getFloat("y"));
+				Vector2 last = new Vector2(bef.getFloat("x"), bef.getFloat("y"));
+				
+				return first.interpolate(last, factor, allPossibles.get(ob.getString("interpolation"))).y;
+			}
+		};
+		
+	}
+	
 	public static ArrayList<Vector2> vector2ListHardClone(ArrayList<Vector2> list){
 		ArrayList<Vector2> novo = new ArrayList<Vector2>();
 		
@@ -66,12 +154,77 @@ public class Helper {
 		return novo;
 	}
 	
+	public static void setShaderUniformTexture(int index, Texture texture, ShaderProgram shader, String uniformName) {
+		
+		switch(index) {
+		case 0:
+			Gdx.graphics.getGL20().glActiveTexture(GL20.GL_TEXTURE0);
+			break;
+		case 1:
+			Gdx.graphics.getGL20().glActiveTexture(GL20.GL_TEXTURE1);
+			break;
+		case 2:
+			Gdx.graphics.getGL20().glActiveTexture(GL20.GL_TEXTURE2);
+			break;
+		case 3:
+			Gdx.graphics.getGL20().glActiveTexture(GL20.GL_TEXTURE3);
+			break;
+		case 4:
+			Gdx.graphics.getGL20().glActiveTexture(GL20.GL_TEXTURE4);
+			break;
+		case 5:
+			Gdx.graphics.getGL20().glActiveTexture(GL20.GL_TEXTURE5);
+			break;
+		case 6:
+			Gdx.graphics.getGL20().glActiveTexture(GL20.GL_TEXTURE6);
+			break;
+		}
+		
+		texture.bind(index);
+		shader.setUniformi(uniformName, index);
+		
+		Gdx.graphics.getGL20().glActiveTexture(GL20.GL_TEXTURE0);
+
+	}
+	
+	public static float random(float min, float max) {
+		if(min < max) {
+			return (float)(Math.random() * (max - min) + min);
+		}
+		else {
+			new Exception("Min > Max").printStackTrace();
+			Gdx.app.exit();
+		}
+		return -1;
+	}
+	
+	public static Color randomColor(float alpha) {
+		return new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), alpha);
+	}
+	
+	public static Color randomColor() {
+		return new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), 1);
+	}
+	
+	public static Color randomColor(Color base, float deviation) {
+		return base.cpy().lerp(randomColor(), deviation);
+	}
+	
+	public static Color randomSaturated(Color base, float saturation) {
+		boolean light = Math.random() < 00f;
+		
+		if(light) {
+			return base.cpy().lerp(Color.WHITE, Helper.random(0, saturation));
+		}
+		else {
+			return base.cpy().lerp(Color.BLACK, Helper.random(0, saturation));
+		}
+	}
+	
 	public static void renderRegion(SpriteBatch sb, TextureRegion region, Transform transform, boolean flipX, boolean flipY) {
 		renderRegion(sb, region, transform.getPosition(), transform.getAngle(), transform.getScale(), flipX, flipY);
 	}
-	
-	
-	
+		
 	public static void renderRegion(SpriteBatch sb, TextureRegion region, Vector2 position, float angle, Vector2 size,
 			boolean flipX, boolean flipY) {
 	
@@ -89,13 +242,37 @@ public class Helper {
 		
 	}
 	
+	static public Vector2 xy(Vector3 vector) {
+		return new Vector2(vector.x, vector.y);
+	}
+	
+	static public Vector2 xy(Vector3 vector, Vector2 out) {
+		out.set(vector.x, vector.y);
+		return out;
+	}
+	
+	static public Vector2 getMouseWorldPos(OrthographicCamera camera) {
+		return xy(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)));
+	}
+	
+	static public Vector2 getMouseWorldPos(OrthographicCamera camera, Vector2 out) {
+		return xy(camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)), out);
+	}
+	
+	static Vector2 aux1 = new Vector2();
+	static Vector2 aux2 = new Vector2();
+
+	
 	public static void renderRegionNoCenter(SpriteBatch sb, TextureRegion region, Vector2 position, float angle, Vector2 size,
 			boolean flipX, boolean flipY) {
 	
+		aux1.set(region.getRegionWidth() * size.x,0).rotate(angle);
+		aux2.set(0,region.getRegionHeight() * size.y).rotate(angle);
+		
 		sb.draw(
 				region,
-				position.x,
-				position.y,
+				position.x + (flipX ? aux1.x : 0) + (flipY ? aux2.x : 0),
+				position.y + (flipX ? aux1.y : 0) + (flipY ? aux2.y : 0),
 				0,//originx
 				0,//originy
 				region.getRegionWidth(),//width
@@ -103,6 +280,7 @@ public class Helper {
 				size.x * (flipX ? -1 : 1),//scalex
 				size.y * (flipY ? -1 : 1),//scaley
 				angle);
+		
 		
 	}
 	
@@ -142,6 +320,28 @@ public class Helper {
 				(int)(rectSize.y / (float)tex.getHeight()),
 				false,
 				false);
+	}
+	
+	public static void renderTexNoCenter(SpriteBatch sb, Texture texture, Vector2 position, float angle, Vector2 size,
+			boolean flipX, boolean flipY) {
+			
+		sb.draw(
+				texture,
+				position.x,
+				position.y,
+				0,//originx
+				0,//originy
+				texture.getWidth(),//width
+				texture.getHeight(),//height
+				size.x * (flipX ? -1 : 1),//scalex
+				size.y * (flipY ? -1 : 1),//scaley
+				angle,
+				0,
+				0,
+				texture.getWidth(),
+				texture.getHeight(),
+				false, false);
+		
 	}
 	
 	public static void renderTex(SpriteBatch sb, Texture tex, Vector2 position, Vector2 rectSize, float scale) {
@@ -315,7 +515,7 @@ public class Helper {
 			return b;
 		}
 		
-		public static Body creatCircleBody(World world, float radius, BodyDef def) {
+		public static Body createCircleBody(World world, float radius, BodyDef def) {
 			Body b =  world.createBody(def);
 			createCircleFixture(b, Vector2.Zero, radius);
 			return b;
@@ -528,6 +728,10 @@ public class Helper {
 		clone.setOpacity(mo.getOpacity());
 		
 		return clone;
+	}
+
+	public static int randomFromIntArray(int[] blends) {
+		return blends[(int) (Math.random() * blends.length)];
 	}
 
 

@@ -61,6 +61,10 @@ public abstract class GameObject {
 		return info.getState().getCamera();
 	}
 	
+	public GameObject(ObjectInfo info) {
+		this(info, new MapProperties());
+	}
+	
 	public GameObject(ObjectInfo info, MapProperties properties) {
 		this(info, properties, false);
 	}
@@ -168,6 +172,14 @@ public abstract class GameObject {
 	 */
 	protected void renderTexture(SpriteBatch sb, Texture tex, boolean flipX, boolean flipY) {
 		Helper.renderTex(sb, tex, transform, flipX, flipY);
+	}
+	
+	protected void renderBodyTextureNoCenter(SpriteBatch sb, Texture texture, Body body, boolean flipX, boolean flipY) {
+		Helper.renderTexNoCenter(sb, texture, body.getWorldCenter().cpy().add(transform.getPosition().cpy().scl(1/State.PHYS_SCALE)), (float)Math.toDegrees(body.getAngle()) + transform.getAngle(), transform.getScale().cpy().scl(1/State.PHYS_SCALE), flipX, flipY);
+	}
+	
+	protected void renderBodyTextureNoCenter(SpriteBatch sb, Texture texture, Body body, boolean flipX, boolean flipY, Transform customTransform) {
+		Helper.renderTexNoCenter(sb, texture, body.getWorldCenter().cpy().add(customTransform.getPosition().cpy().scl(1/State.PHYS_SCALE)), (float)Math.toDegrees(body.getAngle()) + customTransform.getAngle(), customTransform.getScale().cpy().scl(1/State.PHYS_SCALE), flipX, flipY);
 	}
 	
 	protected void renderBodyRegionNoCenter(SpriteBatch sb, TextureRegion region, Body body, boolean flipX, boolean flipY) {
@@ -327,6 +339,10 @@ public abstract class GameObject {
 	}
 	
 	public void inputAxis(Device device, String axisName, float value) {
+	}
+	
+	public Vector2 getWorldPosition() {
+		return transform.getPosition();
 	}
 
 }

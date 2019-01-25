@@ -9,27 +9,31 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.game.helper.Helper;
 import com.mygdx.game.states.State;
 
-public class TiledImageObject extends GameObject{
+public class ImageGameObject extends GameObject{
 	
 	protected TiledMapTileMapObject imgObj;
 	protected Body body;
 	
-	public TiledImageObject(ObjectInfo info, MapProperties properties) {
+	public ImageGameObject(ObjectInfo info, MapProperties properties) {
 		super(info, properties);
 		imgObj = get("this", TiledMapTileMapObject.class);
 		body = get("body", Body.class);
 		
 		if(body != null) {
-			transform.getPosition().set(0, 0);
+			
+			transform.setPosition(0, 0);			
 			transform.setAngle(0);
 			transform.setScale(new Vector2(imgObj.getScaleX(), imgObj.getScaleY()));
+			
+			
 		}
 	}
 	
-	public TiledImageObject(ObjectInfo info, TiledMapTileMapObject imgObj) {
+	public ImageGameObject(ObjectInfo info, TiledMapTileMapObject imgObj) {
 		super(info, imgObj.getProperties());
 		this.imgObj = imgObj;
 		
@@ -40,6 +44,16 @@ public class TiledImageObject extends GameObject{
 			transform.setAngle(0);
 			transform.setScale(new Vector2(imgObj.getScaleX(), imgObj.getScaleY()));
 		}
+	}
+	
+	public Vector2 getWorldPosition() {
+		
+		if(body != null) {
+			return body.getWorldCenter();
+		}
+		
+		return transform.getPosition();
+		
 	}
 
 	public void render(SpriteBatch sb, ShapeRenderer sr, OrthographicCamera camera) {
@@ -57,9 +71,9 @@ public class TiledImageObject extends GameObject{
 				Helper.renderRegion(
 						sb,
 						region,
-						new Vector2(imgObj.getX(), imgObj.getY()).cpy().scl(getMapScale()/State.PHYS_SCALE),
-						360 - imgObj.getRotation(),
-						new Vector2(getMapScale() * imgObj.getScaleX() / State.PHYS_SCALE, getMapScale() * imgObj.getScaleY() / State.PHYS_SCALE),
+						new Vector2(imgObj.getX(), imgObj.getY()).cpy().scl(getMapScale()/State.PHYS_SCALE).add(transform.getPosition()),
+						360 - imgObj.getRotation() + transform.getAngle(),
+						new Vector2(getMapScale() * imgObj.getScaleX() / State.PHYS_SCALE, getMapScale() * imgObj.getScaleY() / State.PHYS_SCALE).scl(transform.getScale()),
 						imgObj.isFlipHorizontally(),
 						imgObj.isFlipVertically(),
 						new Vector2(getMapScale() * imgObj.getOriginX() / State.PHYS_SCALE, getMapScale() * imgObj.getOriginY() / State.PHYS_SCALE)
@@ -77,7 +91,10 @@ public class TiledImageObject extends GameObject{
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		
+		if(body != null) {
+			getState().deleteBody(body);
+		}
 		
 	}
 

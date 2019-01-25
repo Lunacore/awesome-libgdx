@@ -1,46 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="1280" tileheight="720" infinite="0" nextobjectid="82">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="1" height="1" tilewidth="1280" tileheight="720" infinite="0" nextlayerid="2" nextobjectid="82">
  <properties>
   <property name="ambientAlpha" type="float" value="0.2"/>
   <property name="ambientLight" type="color" value="#ff000000"/>
  </properties>
  <tileset firstgid="1" source="../tilesets/componentes.tsx"/>
- <objectgroup name="bijeto">
+ <objectgroup id="1" name="bijeto">
   <object id="72" type="object" gid="10" x="-25.6667" y="731" width="1340.33" height="123"/>
   <object id="73" x="117.333" y="458.667" width="52" height="90.6667">
    <properties>
     <property name="class" value="com.mygdx.game.test.Personagem"/>
    </properties>
-  </object>
-  <object id="78" type="coneLight" x="128" y="-101.333" rotation="-90">
-   <properties>
-    <property name="class" value="com.mygdx.game.objects.LightObject"/>
-    <property name="color" type="color" value="#ffffffff"/>
-    <property name="coneAngle" type="float" value="30"/>
-    <property name="distance" type="float" value="30"/>
-    <property name="intensity" type="float" value="1"/>
-   </properties>
-   <ellipse/>
-  </object>
-  <object id="80" type="coneLight" x="644" y="-110.667" rotation="-90">
-   <properties>
-    <property name="class" value="com.mygdx.game.objects.LightObject"/>
-    <property name="color" type="color" value="#ffffffff"/>
-    <property name="coneAngle" type="float" value="30"/>
-    <property name="distance" type="float" value="30"/>
-    <property name="intensity" type="float" value="1"/>
-   </properties>
-   <ellipse/>
-  </object>
-  <object id="81" type="coneLight" x="1212" y="-116" rotation="-90">
-   <properties>
-    <property name="class" value="com.mygdx.game.objects.LightObject"/>
-    <property name="color" type="color" value="#ffffffff"/>
-    <property name="coneAngle" type="float" value="30"/>
-    <property name="distance" type="float" value="30"/>
-    <property name="intensity" type="float" value="1"/>
-   </properties>
-   <ellipse/>
   </object>
  </objectgroup>
 </map>

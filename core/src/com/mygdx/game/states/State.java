@@ -35,7 +35,7 @@ public abstract class State{
 	public static final int NUM_RAYS = 200;
 	
 	public StateManager manager;
-	ShapeRenderer sr;
+	protected ShapeRenderer sr;
 	OrthographicCamera camera;
 	ArrayList<GameObject> gos;
 	TmxRenderer tmxRenderer;
@@ -82,6 +82,7 @@ public abstract class State{
 		}
 		return result;
 	}
+
 	
 	public ConeLight addConeLight(Color color, Vector2 position, float distance, float angle, float coneAngle) {
 		if(rayHandler != null)
@@ -157,6 +158,9 @@ public abstract class State{
 		
 		if(listener != null)
 		getWorld().setContactListener(listener);
+		else {
+			getWorld().setContactListener(new DefaultStateListener(this));
+		}
 		
 		b2dr = new Box2DDebugRenderer();
 		camera.zoom = 1/PHYS_SCALE;
@@ -269,6 +273,10 @@ public abstract class State{
 				removeObject(gos.get(i));
 			}
 		}
+	}
+	
+	public boolean inputPressed(String name) {
+		return manager.keyMapper.inputPressed(name);
 	}
 
 	public boolean keyDown(int keycode) {

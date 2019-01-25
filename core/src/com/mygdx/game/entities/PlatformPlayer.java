@@ -27,7 +27,7 @@ public abstract class PlatformPlayer extends GameObject{
 	protected float jumpStrength;
 	private int jumps;
 	protected int totalJumps;
-	protected float speed = 10;
+	protected float speed = 7;
 	
 	public PlatformPlayer(ObjectInfo info, MapProperties properties) {
 		super(info, properties);
@@ -42,8 +42,8 @@ public abstract class PlatformPlayer extends GameObject{
 		Fixture foot = Helper.PhysHelp.createCircleFixture(body, new Vector2(0, -size.y/2f), size.x/2f * 0.9f);
 		foot.setUserData("PLAYER_FOOT");
 		body.setUserData(this);
-		setJumpStrength(20);
-		setTotalJumps(2);
+		setJumpStrength(7);
+		setTotalJumps(1);
 		
 		getState().manager.registerKey("Left", Device.KEYBOARD, Keys.A);
 		getState().manager.registerKey("Right", Device.KEYBOARD, Keys.D);
@@ -76,6 +76,10 @@ public abstract class PlatformPlayer extends GameObject{
 		getState().manager.registerKey("Jump", Device.CONTROLLER, XBoxController.POV_UP);
 	}
 
+	
+	public Vector2 getWorldPosition() {
+		return body.getWorldCenter();
+	}
 
 	
 	public boolean update(float delta) {
@@ -89,6 +93,18 @@ public abstract class PlatformPlayer extends GameObject{
 		if(!left && !right) {
 			body.setLinearVelocity(body.getLinearVelocity().x * 0.9f, body.getLinearVelocity().y);
 		}
+		
+		if(getState().inputPressed("Jump") && body.getLinearVelocity().y > 0) {
+			body.setGravityScale(0.5f);
+		}
+		else {
+			body.setGravityScale(1);
+		}
+		
+		if(body.getLinearVelocity().y < 0) {
+			body.setGravityScale(2);
+		}
+		
 		return false;
 	}
 	
@@ -171,6 +187,10 @@ public abstract class PlatformPlayer extends GameObject{
 			PlatformPlayer player = (PlatformPlayer) listener.getInstanceFromContact(contact, PlatformPlayer.class);
 			player.setOnFloor(false);
 		}
+	}
+	
+	public void dispose() {
+		getState().deleteBody(body);
 	}
 
 	public Vector2 getBodyPosition() {

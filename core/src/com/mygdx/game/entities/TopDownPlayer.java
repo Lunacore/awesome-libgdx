@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.game.helper.Helper;
+import com.mygdx.game.input.KeyMapper.Device;
 import com.mygdx.game.states.State;
 
 public abstract class TopDownPlayer extends GameObject{
@@ -17,12 +18,6 @@ public abstract class TopDownPlayer extends GameObject{
 	protected Body body;
 	protected float speed = 10;
 	protected Vector2 input;
-	
-	
-	int keyUp = Keys.UP;
-	int keyDown = Keys.DOWN;
-	int keyLeft = Keys.LEFT;
-	int keyRight = Keys.RIGHT;
 	
 	public TopDownPlayer(ObjectInfo info, MapProperties properties) {
 		super(info, properties);
@@ -35,9 +30,39 @@ public abstract class TopDownPlayer extends GameObject{
 				get("y", Float.class) + get("height", Float.class) / 2f);
 		
 		def.position.set(position.scl(1/State.PHYS_SCALE));
-		body = Helper.PhysHelp.creatCircleBody(getState().getWorld(), get("width", Float.class)/2f, def);
+		body = Helper.PhysHelp.createCircleBody(getState().getWorld(), get("width", Float.class)/2f, def);
 		body.setUserData(this);
 		input = new Vector2();
+		
+		getState().manager.registerKey("Up", Device.KEYBOARD, Keys.W);
+		getState().manager.registerKey("Left", Device.KEYBOARD, Keys.A);
+		getState().manager.registerKey("Down", Device.KEYBOARD, Keys.S);
+		getState().manager.registerKey("Right", Device.KEYBOARD, Keys.D);
+
+	}
+	
+	
+	public Vector2 getWorldPosition() {
+		return body.getWorldCenter();
+	}
+
+	
+	public TopDownPlayer(ObjectInfo info, Vector2 position, float radius) {
+		super(info);
+		
+		transform.setPosition(Vector2.Zero.cpy());
+		BodyDef def = new BodyDef();
+		def.type = BodyType.DynamicBody;
+		def.fixedRotation = true;
+		def.position.set(position.scl(1/State.PHYS_SCALE));
+		body = Helper.PhysHelp.createCircleBody(getState().getWorld(), radius, def);
+		body.setUserData(this);
+		input = new Vector2();
+		
+		getState().manager.registerKey("Up", Device.KEYBOARD, Keys.W);
+		getState().manager.registerKey("Left", Device.KEYBOARD, Keys.A);
+		getState().manager.registerKey("Down", Device.KEYBOARD, Keys.S);
+		getState().manager.registerKey("Right", Device.KEYBOARD, Keys.D);
 	}
 
 	public abstract void render(SpriteBatch sb, ShapeRenderer sr, OrthographicCamera camera);
@@ -49,41 +74,42 @@ public abstract class TopDownPlayer extends GameObject{
 		return false;
 	}
 	
-	public boolean keyDown(int keycode) {
-		if(keycode == keyLeft) {
+	@Override
+	public void inputIn(Device device, String mapName) {
+		if(mapName.equals("Left")) {
 			input.x = -1;
 		}
-		if(keycode == keyRight) {
+		if(mapName.equals("Right")) {
 			input.x = 1;
 		}
-		if(keycode == keyUp) {
+		if(mapName.equals("Up")) {
 			input.y = 1;
 		}
-		if(keycode == keyDown) {
+		if(mapName.equals("Down")) {
 			input.y = -1;
 		}
-
-		return false;
+		super.inputIn(device, mapName);
 	}
-
-	public boolean keyUp(int keycode) {
-		if(keycode == keyLeft) {
+	
+	@Override
+	public void inputOut(Device device, String mapName) {
+		if(mapName.equals("Left")) {
 			if(input.x == -1)
 			input.x = 0;
 		}
-		if(keycode == keyRight) {
+		if(mapName.equals("Right")) {
 			if(input.x == 1)
 			input.x = 0;
 		}
-		if(keycode == keyUp) {
+		if(mapName.equals("Up")) {
 			if(input.y == 1)
 			input.y = 0;
 		}
-		if(keycode == keyDown) {
+		if(mapName.equals("Down")) {
 			if(input.y == -1)
 			input.y = 0;
 		}
-		return false;
+		super.inputOut(device, mapName);
 	}
 
 	public void setSpeed(float speed) {
@@ -100,37 +126,5 @@ public abstract class TopDownPlayer extends GameObject{
 
 	public void setBodyPosition(Vector2 position) {
 		body.setTransform(position.x, position.y, 0);
-	}
-
-	public int getKeyUp() {
-		return keyUp;
-	}
-
-	public void setKeyUp(int keyUp) {
-		this.keyUp = keyUp;
-	}
-
-	public int getKeyDown() {
-		return keyDown;
-	}
-
-	public void setKeyDown(int keyDown) {
-		this.keyDown = keyDown;
-	}
-
-	public int getKeyLeft() {
-		return keyLeft;
-	}
-
-	public void setKeyLeft(int keyLeft) {
-		this.keyLeft = keyLeft;
-	}
-
-	public int getKeyRight() {
-		return keyRight;
-	}
-
-	public void setKeyRight(int keyRight) {
-		this.keyRight = keyRight;
 	}
 }
