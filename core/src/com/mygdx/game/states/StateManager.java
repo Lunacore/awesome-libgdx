@@ -6,7 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector3;
@@ -39,6 +41,11 @@ public class StateManager{
 		stateBuffer = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 	}
 	
+	public void force(int state) {
+		currentState = state;
+		nextState = state;
+	}
+	
 	public int addState(State state) {
 		state.setManager(this);
 		states.add(state);
@@ -55,6 +62,16 @@ public class StateManager{
 	
 	public void changeState(int nextState) {
 		states.get(nextState).create();
+		states.get(nextState).enter();
+
+		this.nextState = nextState;
+	}
+	
+	public void flipState(int nextState) {
+		if(!states.get(nextState).created) {
+			states.get(nextState).create();
+		}
+		states.get(nextState).enter();
 		this.nextState = nextState;
 	}
 	
@@ -75,6 +92,8 @@ public class StateManager{
 		
 		if(nextState != currentState) {
 			FrameBufferStack.begin(stateBuffer);
+			Gdx.gl.glClearColor(0, 0, 0, 0);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			states.get(nextState).render(sb);
 			FrameBufferStack.end();
 			
@@ -85,7 +104,7 @@ public class StateManager{
 					0, 0, ScreenSize.getWidth(), ScreenSize.getHeight(), false, true);
 			sb.end();
 			Helper.disableBlend();
-			
+						
 			alpha += Gdx.graphics.getDeltaTime() * transitionSpeed;
 			if(alpha > 1) {
 				alpha = 0;
@@ -182,6 +201,10 @@ public class StateManager{
 	
 	public void inputOut(KeyMapper.Device device, String mapName) {
 		current().inputOut(device, mapName);
+	}
+
+	public State getState(int i) {
+		return states.get(i);
 	}
 
 }

@@ -1,6 +1,8 @@
 package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.mappings.Xbox;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.game.helper.Helper;
+import com.mygdx.game.input.XBoxController;
 import com.mygdx.game.input.KeyMapper.Device;
 import com.mygdx.game.states.State;
 
@@ -38,6 +41,7 @@ public abstract class TopDownPlayer extends GameObject{
 		getState().manager.registerKey("Left", Device.KEYBOARD, Keys.A);
 		getState().manager.registerKey("Down", Device.KEYBOARD, Keys.S);
 		getState().manager.registerKey("Right", Device.KEYBOARD, Keys.D);
+		
 
 	}
 	
@@ -110,6 +114,27 @@ public abstract class TopDownPlayer extends GameObject{
 			input.y = 0;
 		}
 		super.inputOut(device, mapName);
+	}
+	
+	@Override
+	public boolean axisMoved(Controller controller, int axisCode, float value) {
+		
+		
+		if(axisCode == XBoxController.AXIS_LEFT_X) {
+			if(Math.abs(value) > 0.1f)
+				input.x = value;
+			else
+				input.x = 0;
+		}
+		
+		if(axisCode == XBoxController.AXIS_LEFT_Y) {
+			if(Math.abs(value) > 0.1f)
+				input.y = value * -1;
+			else
+				input.y = 0;
+		}
+				
+		return super.axisMoved(controller, axisCode, value);
 	}
 
 	public void setSpeed(float speed) {

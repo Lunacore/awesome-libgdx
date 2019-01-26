@@ -57,4 +57,10 @@ public class StateOne extends State{
 		
 	}
 
+	@Override
+	public void enter() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

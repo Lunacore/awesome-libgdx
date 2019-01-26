@@ -626,6 +626,7 @@ public class MyBox2DMapObjectParser {
 	
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = shape;
+			fixtureDef.density = 1;
 			assignProperties(fixtureDef, heritage);
 			assignProperties(fixtureDef, mapProperties);
 			assignProperties(fixtureDef, layerProperties);

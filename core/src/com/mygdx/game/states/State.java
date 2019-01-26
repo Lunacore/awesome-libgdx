@@ -32,13 +32,14 @@ import box2dLight.RayHandler;
 public abstract class State{
 	
 	public static final float PHYS_SCALE = 45f;
-	public static final int NUM_RAYS = 200;
+	public static int NUM_RAYS = 200;
 	
 	public StateManager manager;
 	protected ShapeRenderer sr;
 	OrthographicCamera camera;
 	ArrayList<GameObject> gos;
 	TmxRenderer tmxRenderer;
+	boolean inputEnabled = true;
 	
 	//Física
 	private World world;
@@ -51,6 +52,20 @@ public abstract class State{
 	
 	//Iluminação
 	RayHandler rayHandler;
+	public boolean created;
+	
+	public void setInputEnabled(boolean inputEnabled) {
+		this.inputEnabled = inputEnabled;
+		
+		if(!inputEnabled) {
+			manager.keyMapper.releaseAll();
+		}
+	}
+	
+	public void setAmbientLight(Color c) {
+		if(rayHandler != null)
+			rayHandler.setAmbientLight(c);
+	}
 	
 	public PointLight addPointLight(Color color, Vector2 position) {
 		if(rayHandler != null)
@@ -71,6 +86,7 @@ public abstract class State{
 		gos.remove(obj);
 		
 	}
+
 
 	@SuppressWarnings("rawtypes")
 	public ArrayList<GameObject> getByClass(Class clazz){
@@ -180,7 +196,11 @@ public abstract class State{
 		debugDraw = false;
 	}
 	
-	public abstract void create();
+	public void create() {
+		created = true;
+	}
+	
+	public abstract void enter();
 	
 	public void preRender(SpriteBatch sb) {
 		sb.setProjectionMatrix(camera.combined);
@@ -273,144 +293,188 @@ public abstract class State{
 				removeObject(gos.get(i));
 			}
 		}
+		created = false;
 	}
 	
 	public boolean inputPressed(String name) {
+		if(inputEnabled)
 		return manager.keyMapper.inputPressed(name);
+		
+		return false;
 	}
 
 	public boolean keyDown(int keycode) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).keyDown(keycode);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).keyDown(keycode);
+			}
 		}
 		return false;
 	}
 
 	public boolean keyUp(int keycode) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).keyUp(keycode);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).keyUp(keycode);
+			}
 		}
 		return false;
 	}
 
 	public boolean keyTyped(char character) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).keyTyped(character);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).keyTyped(character);
+			}
 		}
 		return false;
 	}
 
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).touchDown(screenX, screenY, pointer, button);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).touchDown(screenX, screenY, pointer, button);
+			}
 		}
 		return false;
 	}
 
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).touchUp(screenX, screenY, pointer, button);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).touchUp(screenX, screenY, pointer, button);
+			}
 		}
 		return false;
 	}
 
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).touchDragged(screenX, screenY, pointer);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).touchDragged(screenX, screenY, pointer);
+			}
 		}
 		return false;
 	}
 
 	public boolean mouseMoved(int screenX, int screenY) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).mouseMoved(screenX, screenY);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).mouseMoved(screenX, screenY);
+			}
 		}
 		return false;
 	}
 
 	public boolean scrolled(int amount) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).scrolled(amount);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).scrolled(amount);
+			}
 		}
 		return false;
 	}
 
 	public void connected(Controller controller) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).connected(controller);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).connected(controller);
+			}
 		}
 	}
 
-	public void disconnected(Controller controller) {	
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).disconnected(controller);
+	public void disconnected(Controller controller) {
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).disconnected(controller);
+			}
 		}
 	}
 
 	public boolean buttonDown(Controller controller, int buttonCode) {
-		for(int i = gos.size() - 1; i>= 0; i --) {
-			gos.get(i).buttonDown(controller, buttonCode);
+		if(inputEnabled) {
+			for(int i = gos.size() - 1; i>= 0; i --) {
+				gos.get(i).buttonDown(controller, buttonCode);
+			}
 		}
 		return false;
 	}
 
 	public boolean buttonUp(Controller controller, int buttonCode) {
+		if(inputEnabled) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
 			gos.get(i).buttonUp(controller, buttonCode);
+		}
 		}
 		return false;
 	}
 
 	public boolean axisMoved(Controller controller, int axisCode, float value) {
+		if(inputEnabled) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
 			gos.get(i).axisMoved(controller, axisCode, value);
+		}
 		}
 		return false;
 	}
 
 	public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+		if(inputEnabled) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
 			gos.get(i).povMoved(controller, povCode, value);
+		}
 		}
 		return false;
 	}
 
 	public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
+		if(inputEnabled) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
 			gos.get(i).xSliderMoved(controller, sliderCode, value);
+		}
 		}
 		return false;
 	}
 
 	public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
+		if(inputEnabled) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
 			gos.get(i).ySliderMoved(controller, sliderCode, value);
+		}
 		}
 		return false;
 	}
 
 	public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
+		if(inputEnabled) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
 			gos.get(i).accelerometerMoved(controller, accelerometerCode, value);
+		}
 		}
 		return false;
 	}
 	
 
 	public void inputIn(Device device, String mapName) {
+		if(inputEnabled) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
 			gos.get(i).inputIn(device, mapName);
 		}
+		}
 	}
 	public void inputOut(Device device, String mapName) {
+		if(inputEnabled) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
 			gos.get(i).inputOut(device, mapName);
+		}
 		}
 	}
 			
 	public void inputAxis(Device device, String axisName, float value) {
+		if(inputEnabled) {
 		for(int i = gos.size() - 1; i>= 0; i --) {
 			gos.get(i).inputAxis(device, axisName, value);
+		}
 		}
 	}
 
@@ -429,6 +493,8 @@ public abstract class State{
 	public RayHandler getRayHandler() {
 		return rayHandler;
 	}
+
+
 
 	
 }

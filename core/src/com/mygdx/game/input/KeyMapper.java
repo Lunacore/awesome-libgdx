@@ -280,6 +280,14 @@ public class KeyMapper implements InputProcessor, ControllerListener{
 		}
 	}
 
+	public void releaseAll() {
+		for(String s : keymaps.keySet()) {
+			for(KeyMap k : keymaps.get(s)) {
+				inputOut(k.device, s);
+			}
+		}
+	}
+
 	
 	
 }
